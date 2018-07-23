@@ -5,9 +5,9 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class LinkedContainer<E> implements Iterable<E> {
-    private int size = 0;
-    private Node<E> first;
-    private Node<E> last;
+    protected int size = 0;
+    protected Node<E> first;
+    protected Node<E> last;
 
     public boolean add(E e) {
         linkLast(e);

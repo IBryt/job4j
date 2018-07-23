@@ -7,8 +7,8 @@ import java.util.NoSuchElementException;
  */
 public class SimpleArrayList<E> {
 
-    private int size;
-    private Node<E> first;
+    protected int size;
+    protected Node<E> first;
 
 
     /**
@@ -32,7 +32,7 @@ public class SimpleArrayList<E> {
         return unlinkFirst(f);
     }
 
-    private E unlinkFirst(Node<E> f) {
+    E unlinkFirst(Node<E> f) {
         final E element = f.date;
         f.date = null;
         this.first = f.next;
@@ -60,7 +60,7 @@ public class SimpleArrayList<E> {
     /**
      * Класс предназначен для хранения данных.
      */
-    private static class Node<E> {
+    public static class Node<E> {
 
         E date;
         Node<E> next;
