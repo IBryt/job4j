@@ -41,4 +41,13 @@ public class NodeTest {
         four.next   = two;
         assertThat(first.hasCycle(first), is(true));
     }
+
+    @Test
+    public void whenHasCycleReturnTrue3() {
+        first.next  = two;
+        two.next    = third;
+        third.next  = four;
+        four.next   = null;
+        assertThat(first.hasCycle(first), is(false));
+    }
 }
