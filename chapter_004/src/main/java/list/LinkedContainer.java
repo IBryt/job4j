@@ -38,7 +38,7 @@ public class LinkedContainer<E> implements Iterable<E> {
     }
 
     private String outOfBoundsMsg(int index) {
-        return "Index: " + index + ", Size: " + size;
+        return String.format("Index: %d, Size: %d", index, size);
     }
 
     private boolean isElementIndex(int index) {
