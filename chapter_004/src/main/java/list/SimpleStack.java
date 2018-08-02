@@ -1,13 +1,12 @@
 package list;
 
-public class SimpleStack<T> extends SimpleArrayList<T> {
+public class SimpleStack<T> extends AbstractUnidirectionalList<T> {
 
-    public T poll() {
-        final Node<T> f = first;
-        return (f == null) ? null : unlinkFirst(f);
-    }
-
+    @Override
     public void push(T value) {
-        add(value);
+        Node<T> newLink = new Node<>(value);
+        newLink.next = this.first;
+        this.first = newLink;
+        this.size++;
     }
 }

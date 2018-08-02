@@ -1,20 +1,17 @@
 package list;
 
-public class SimpleQueue<T> extends LinkedContainer<T> {
-    public T poll() {
-        final Node<T> f = first;
-        return (f == null) ? null : unlinkFirst(f);
-    }
+public class SimpleQueue<T> extends AbstractUnidirectionalList<T> {
 
-    protected T unlinkFirst(Node<T> f) {
-        final T element = f.item;
-        f.item = null;
-        this.first = f.next;
-        size--;
-        return element;
-    }
+    private Node<T> last;
 
     public void push(T value) {
-        add(value);
+        Node<T> newLink = new Node(value);
+        if (isEmpty()) {
+            first = newLink;
+        } else {
+            last.next = newLink;
+        }
+        last = newLink;
+        size++;
     }
 }
