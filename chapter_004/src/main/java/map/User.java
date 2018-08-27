@@ -34,4 +34,12 @@ public class User {
         map.put(u2, o);
         System.out.println(map);
     }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + children;
+        result = 31 * result + (birthday != null ? birthday.hashCode() : 0);
+        return result;
+    }
 }
