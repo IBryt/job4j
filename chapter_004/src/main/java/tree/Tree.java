@@ -42,6 +42,17 @@ public class Tree<E extends Comparable<E>> implements SimpleTree<E> {
         return rsl;
     }
 
+    public boolean isBinary() {
+        boolean res = true;
+        for (E e : this) {
+            if (findBy(e).get().leaves().size() > 2) {
+                res = false;
+                break;
+            }
+        }
+        return res;
+    }
+
     @Override
     public Iterator<E> iterator() {
         return new Iterator<E>() {
