@@ -4,7 +4,7 @@ import com.sun.org.apache.xpath.internal.SourceTree;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.GregorianCalendar;
+import java.util.*;
 
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.core.Is.is;
@@ -15,6 +15,7 @@ public class ContainerMapTest {
     private ContainerMap<User, String> container;
     private User u1;
     private User u2;
+    private Map.Entry<User, String> entry;
 
     @Before
     public void init() {
@@ -70,5 +71,26 @@ public class ContainerMapTest {
         assertThat(v1.hashCode() == v2.hashCode(), is(true));
         con.insert(v1, v1);
         con.insert(v2, v2);
+    }
+
+    @Test()
+    public void whenMapOneEntryReturnKeyValue() {
+        Iterator<Map.Entry<User, String>> iterator = container.entrySet().iterator();
+        entry = iterator.next();
+        assertThat(entry.getKey(), is(u1));
+        assertThat(entry.getValue(), is("test1"));
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void whenCallMethodNextMoreSizeMapReturnNoSuchElementException() {
+        Iterator<Map.Entry<User, String>> iterator = container.entrySet().iterator();
+        entry = iterator.next();
+        entry = iterator.next();
+    }
+    @Test(expected = ConcurrentModificationException.class)
+    public void whenInsertEntryDuringIterationReturnConcurrentModificationException() {
+        Iterator<Map.Entry<User, String>> iterator = container.entrySet().iterator();
+        container.insert(u2, "test");
+        iterator.next();
     }
 }

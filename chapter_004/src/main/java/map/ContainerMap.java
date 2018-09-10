@@ -1,11 +1,14 @@
 package map;
 
+import java.util.*;
+
 public class ContainerMap<K, V> {
 
     private static final int DEFAULT_INITIAL_CAPACITY = 1 << 4; // aka 16
     private int size = 0;
     private int threshold;
     private Node<K, V>[] table;
+    private Set<Map.Entry<K, V>>  entrySet;
 
     public ContainerMap(int initialCapacity) {
         this.threshold = initialCapacity;
@@ -15,15 +18,17 @@ public class ContainerMap<K, V> {
         this.threshold = DEFAULT_INITIAL_CAPACITY;
     }
 
-    private static class Node<K, V> {
+    private static class Node<K, V>  implements Map.Entry<K, V> {
         final int hash;
         final K key;
         V value;
+        Node<K, V> next;
 
-        Node(int hash, K key, V value) {
+        Node(int hash, K key, V value, Node<K, V> next) {
             this.hash = hash;
             this.key = key;
             this.value = value;
+            this.next = next;
         }
 
         public final K getKey() {
@@ -91,7 +96,7 @@ public class ContainerMap<K, V> {
             i = (n - 1) & hash;
         }
         if ((tab[i]) == null) {
-            tab[i] = new Node<>(hash, key, value);
+            tab[i] = new Node<>(hash, key, value, null);
             result = value;
             if (++size >= threshold) {
                 resize();
@@ -169,5 +174,79 @@ public class ContainerMap<K, V> {
 
     public int size() {
         return size;
+    }
+
+    public Set<Map.Entry<K, V>> entrySet() {
+        if (entrySet == null) {
+            entrySet = new EntrySet();
+        }
+        return entrySet;
+    }
+
+    final class EntrySet extends AbstractSet<Map.Entry<K, V>> {
+
+        public final int size()  {
+            return size;
+        }
+
+        public final void clear() {
+            this.clear();
+        }
+
+        public final Iterator<Map.Entry<K, V>> iterator() {
+            return new EntryIterator();
+        }
+    }
+
+    final class EntryIterator extends HashIterator implements Iterator<Map.Entry<K, V>> {
+        public final Map.Entry<K, V> next() {
+            return nextNode();
+        }
+    }
+    abstract class HashIterator {
+        Node<K, V> next;        // next entry to return
+        Node<K, V> current;     // current entry
+        int index;             // current slot
+        int modCount;
+
+        HashIterator() {
+            Node<K, V>[] t = table;
+            current = next;
+            next = null;
+            index = 0;
+            modCount = size;
+            if (t != null && size > 0) { // advance to first entry
+                do {
+                    if (index < t.length) {
+                        next = t[index++];
+                    }
+                } while (index < t.length && t[index - 1] == null);
+            }
+        }
+
+        public final boolean hasNext() {
+            return next != null;
+        }
+
+        final Node<K, V> nextNode() {
+            Node<K, V>[] t;
+            Node<K, V> e = next;
+            if (modCount != size) {
+                throw new ConcurrentModificationException();
+            }
+            if (e == null) {
+                throw new NoSuchElementException();
+            }
+            current = e;
+            next = current.next;
+            if (next == null && table != null) {
+                do {
+                    if (index < table.length) {
+                        next = table[index++];
+                    }
+                } while (index < table.length && table[index - 1] == null);
+            }
+            return e;
+        }
     }
 }
