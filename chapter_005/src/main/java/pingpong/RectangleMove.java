@@ -13,6 +13,9 @@ public class RectangleMove implements Runnable {
     public void run() {
         int step = 1;
         while (true) {
+            if (Thread.currentThread().isInterrupted()) {
+                return;
+            }
             if (rect.getX() <= 240 && rect.getX() <= 50) {
                 step = 1;
             } else if (rect.getX() >= 240 && rect.getX() >= 50) {
@@ -22,8 +25,10 @@ public class RectangleMove implements Runnable {
             try {
                 Thread.sleep(50);
             } catch (InterruptedException e) {
+                if (!Thread.currentThread().isInterrupted()) {
+                    return;
+                }
                 e.printStackTrace();
-                return;
             }
         }
     }
