@@ -9,28 +9,21 @@ class Store {
     private int added     = 0;
 
     private Info createInfo(List<User> previous, List<User> current) {
-        List<User> temp = new ArrayList<>(current);
-        boolean find;
-        for (User user : new ArrayList<User>(previous)) {
-            find = false;
-            for (int i = 0; i != temp.size(); i++) {
-                if (user.equals(temp.get(i))) {
-                    unchanged++;
-                    temp.remove(i);
-                    find = true;
-                    break;
-                } else if (user.getId() == temp.get(i).getId()) {
-                    temp.remove(i);
-                    changed++;
-                    find = true;
-                    break;
-                }
-            }
-            if (!find) {
-                deleted++;
+        Map<Integer, User> temp = new HashMap<>();
+        for (User user : previous) {
+            temp.put(user.getId(), user);
+        }
+        for (User user : current) {
+            User found = temp.get(user.getId());
+            if (found == null) {
+                added++;
+            } else if (found.equals(user)) {
+                unchanged++;
+            } else {
+                changed++;
             }
         }
-        added = temp.size() - deleted;
+        deleted = previous.size() + added - current.size();
         return new Info();
     }
 
