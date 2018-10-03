@@ -12,7 +12,7 @@ public class RectangleMove implements Runnable {
     @Override
     public void run() {
         int step = 1;
-        while (Thread.currentThread().isInterrupted()) {
+        while (!Thread.currentThread().isInterrupted()) {
             if (rect.getX() <= 240 && rect.getX() <= 50) {
                 step = 1;
             } else if (rect.getX() >= 240 && rect.getX() >= 50) {
