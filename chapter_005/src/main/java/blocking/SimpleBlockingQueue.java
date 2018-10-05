@@ -22,9 +22,13 @@ public class SimpleBlockingQueue<T> {
         return res;
     }
 
-    public synchronized void offer(T value) throws InterruptedException {
+    public synchronized void offer(T value) {
         while (size() == MAX_SIZE) {
-            wait();
+            try {
+                wait();
+            } catch (InterruptedException ie) {
+                ie.printStackTrace();
+            }
         }
         queue.offer(value);
         notify();
