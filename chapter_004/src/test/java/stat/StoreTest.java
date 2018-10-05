@@ -33,9 +33,8 @@ public class StoreTest {
 
     @Test
     public void test() {
-        System.out.println(diff);
+        //System.out.println(diff);
         Map<String, Integer> map = new HashMap<>(3, 1);
-        map.put("unchanged", 1);
         map.put("changed",   2);
         map.put("deleted",   1);
         map.put("added",     2);

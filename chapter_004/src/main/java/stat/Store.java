@@ -3,7 +3,6 @@ package stat;
 import java.util.*;
 
 class Store {
-    private int unchanged = 0;
     private int changed   = 0;
     private int deleted   = 0;
     private int added     = 0;
@@ -17,9 +16,7 @@ class Store {
             User found = temp.get(user.getId());
             if (found == null) {
                 added++;
-            } else if (found.equals(user)) {
-                unchanged++;
-            } else {
+            } else if (!found.equals(user)) {
                 changed++;
             }
         }
@@ -39,7 +36,6 @@ class Store {
 
         public Map<String, Integer> getDiff() {
             Map<String, Integer> map = new HashMap<>(3, 1);
-            map.put("unchanged", unchanged);
             map.put("changed",   changed);
             map.put("deleted",   deleted);
             map.put("added",     added);
@@ -48,7 +44,7 @@ class Store {
 
         @Override
         public String toString() {
-            return String.format("unchanged = %d, changed = %d, deleted = %d, added= %d.", unchanged, changed, deleted, added);
+            return String.format("changed = %d, deleted = %d, added= %d.",  changed, deleted, added);
         }
     }
 }
