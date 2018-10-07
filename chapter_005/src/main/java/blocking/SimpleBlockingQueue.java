@@ -11,7 +11,7 @@ public class SimpleBlockingQueue<T> {
     @SuppressWarnings("StaticGuardedByInstance")
     @GuardedBy("this")
     private final static int MAX_SIZE = 2;
-    private Queue<T> queue = new LinkedList<>();
+    private final Queue<T> queue = new LinkedList<>();
 
     public synchronized T poll() throws InterruptedException {
         while (isEmpty()) {

@@ -16,7 +16,7 @@ public class ProducerCustomer {
         }
     }
 
-    public void changeBlock(boolean enable) {
+    public void changeBlock(final boolean enable) {
         synchronized (this.lock) {
             System.out.println("enable");
             this.blockCustomer = enable;
