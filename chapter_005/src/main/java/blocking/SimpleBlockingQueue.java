@@ -13,9 +13,13 @@ public class SimpleBlockingQueue<T> {
     private final static int MAX_SIZE = 2;
     private final Queue<T> queue = new LinkedList<>();
 
-    public synchronized T poll() throws InterruptedException {
+    public synchronized T poll()  {
         while (isEmpty()) {
-            wait();
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         T res = queue.poll();
         notify();
