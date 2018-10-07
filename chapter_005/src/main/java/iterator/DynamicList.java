@@ -7,11 +7,7 @@ import java.util.*;
 @ThreadSafe
 public class DynamicList<E> implements Iterable<E> {
     @GuardedBy("this")
-    private final ArrayList<E> array;
-
-    public DynamicList(ArrayList<E> array) {
-        this.array = array;
-    }
+    private final ArrayList<E> array = new ArrayList<>();
 
     @Override
     public synchronized Iterator<E> iterator() {
@@ -20,5 +16,13 @@ public class DynamicList<E> implements Iterable<E> {
 
     private List<E> copy(final List<E> list) {
        return Collections.synchronizedList(list);
+    }
+
+    public synchronized boolean add(E e) {
+        return array.add(e);
+    }
+
+    public synchronized E get(int index) {
+        return array.get(index);
     }
 }
