@@ -30,9 +30,13 @@ public class SimpleBlockingQueueTest {
         customer = new Thread() {
             @Override
             public void run() {
-                queue.poll();
-                queue.poll();
-                queue.poll();
+                try {
+                    queue.poll();
+                    queue.poll();
+                    queue.poll();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         };
     }
@@ -64,11 +68,15 @@ public class SimpleBlockingQueueTest {
         Thread consumer = new Thread(
                 () -> {
                     while (!queue.isEmpty() || !Thread.currentThread().isInterrupted()) {
-                        buffer.add(queue.poll());
-                        if (!Thread.currentThread().isInterrupted()) {
-                            break;
+                        try {
+                            buffer.add(queue.poll());
+                        } catch (InterruptedException e) {
+                            if (!Thread.currentThread().isInterrupted()) {
+                                break;
+                            }
+                            e.printStackTrace();
+                            Thread.currentThread().interrupt();
                         }
-                        Thread.currentThread().interrupt();
                     }
                 }
         );

@@ -40,7 +40,12 @@ public class ThreadPool implements Executor {
         public void run() {
             lock();
             while (isRunning) {
-                Runnable nextTask = tasks.poll();
+                Runnable nextTask = null;
+                try {
+                    nextTask = tasks.poll();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 if (nextTask != null) {
                     nextTask.run();
                 }
