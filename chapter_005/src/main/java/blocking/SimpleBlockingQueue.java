@@ -10,7 +10,7 @@ import java.util.Queue;
 public class SimpleBlockingQueue<T> {
     @SuppressWarnings("StaticGuardedByInstance")
     @GuardedBy("this")
-    private final static int MAX_SIZE = 2;
+    private final static int MAX_SIZE = 5;
     private final Queue<T> queue = new LinkedList<>();
 
     public synchronized T poll() throws InterruptedException {
