@@ -36,7 +36,8 @@ public class NonBlockingCache {
      */
     public boolean update(Base model) {
         int version = model.getVersion();
-        cache.computeIfPresent(model.getId(), (k, v) -> updateModel(model));
+        Base temp = updateModel(model);
+        cache.computeIfPresent(model.getId(), (k, v) -> temp);
         return version != model.getVersion();
     }
 
@@ -50,8 +51,8 @@ public class NonBlockingCache {
      * @throws OptimisticException if chang version model
      */
     public boolean delete(Base model) {
-        cache.computeIfPresent(model.getId(), (k, v) -> deleteModel(model));
-        return !cache.containsKey(model.getId());
+        Base temp = deleteModel(model);
+        return null != cache.remove(temp.getId());
     }
 
     private Base deleteModel(Base model) {

@@ -10,7 +10,7 @@ import static org.junit.Assert.assertThat;
 
 public class NonBlockingCacheTest {
     private NonBlockingCache cache;
-    private Base model;
+    private volatile Base model;
     @Before
     public void init() {
         cache = new NonBlockingCache();
@@ -28,9 +28,19 @@ public class NonBlockingCacheTest {
     }
 
     @Test
-    public void whenUpdateModelExistInMapReturnTrue() {
-        cache.update(model);
-//        assertThat(model.getVersion() + 1, is(model.getVersion()));
+    public void whenUpdateModelExistInMapReturnTrue() throws InterruptedException {
+        cache.add(model);
+        int version = model.getVersion();
+        boolean res = cache.update(model);
+        assertThat(res, is(true));
+        assertThat(version + 1, is(model.getVersion()));
+    }
+
+    @Test
+    public void whenDeleteModelExistInMapReturnTrue() throws InterruptedException {
+        cache.add(model);
+        boolean res = cache.delete(model);
+        assertThat(res, is(true));
     }
 
 /*    @Test
