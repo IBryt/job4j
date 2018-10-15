@@ -20,7 +20,7 @@ public class NonBlockingCache {
      * @throws OptimisticException if the model existed before
      */
     public boolean add(Base model) {
-        return cache.putIfAbsent(model.getId(), addModel(model)) == null;
+        return cache.put(model.getId(), addModel(model)) == null;
     }
 
     private Base addModel(Base model) {
