@@ -8,10 +8,10 @@ import static java.lang.String.format;
 
 public class EmailNotification {
 
-    private ExecutorService pool = Executors.newFixedThreadPool(
+    private final ExecutorService pool = Executors.newFixedThreadPool(
             Runtime.getRuntime().availableProcessors());
 
-    public void emailTo(User user) {
+    public void emailTo(final User user) {
 
         pool.submit(new Runnable() {
             @Override
@@ -23,7 +23,7 @@ public class EmailNotification {
         });
     }
 
-    private void send(String suject, String body, String email) {
+    private void send(final String suject, final String body, final String email) {
 
     }
 
