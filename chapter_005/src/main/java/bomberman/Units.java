@@ -1,7 +1,5 @@
 package bomberman;
 
-import java.util.concurrent.locks.ReentrantLock;
-
 public final class Units {
     private final String name;
     private Cell cell;
@@ -9,6 +7,10 @@ public final class Units {
     public Units(String name, Cell cell) {
         this.name = name;
         this.cell = cell;
+    }
+
+    public Cell getCell() {
+        return cell;
     }
 
     public void setCell(Cell cell) {

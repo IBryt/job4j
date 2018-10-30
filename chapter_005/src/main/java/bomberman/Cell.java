@@ -1,7 +1,5 @@
 package bomberman;
 
-import java.util.concurrent.locks.ReentrantLock;
-
 public final class Cell {
     private final int x;
     private final int y;
@@ -42,5 +40,10 @@ public final class Cell {
         int result = x;
         result = 31 * result + y;
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Cell{x=%s, y=%s}", x, y);
     }
 }
