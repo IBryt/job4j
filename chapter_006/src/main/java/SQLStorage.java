@@ -5,8 +5,8 @@ import java.sql.*;
 import static java.lang.String.format;
 
 public class SQLStorage {
-    private static final Logger log = LoggerFactory.getLogger(SQLStorage.class);
-
+    private static final Logger LOG = LoggerFactory.getLogger(SQLStorage.class);
+/*
     public static void main(String[] args) {
         String url = "jdbc:postgresql://localhost:5432/java_a_from_z";
         String username = "postgres";
@@ -57,5 +57,5 @@ public class SQLStorage {
                 }
             }
         }
-    }
+    }*/
 }

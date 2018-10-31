@@ -24,7 +24,7 @@ public class MovementHero extends MovementUnits {
     }
 
     public boolean move(final Cell src, final Cell dst) {
-        if(!firstLock) {
+        if (!firstLock) {
             firstLockUnit();
         }
         boolean res = false;
@@ -37,7 +37,7 @@ public class MovementHero extends MovementUnits {
                 //System.out.println(String.format("src = %s, dst = %s", dst, src));
                 res = true;
             } else {
-                while(true) {
+                while (true) {
                     res = move(src, moveTo());
                     if (res) {
                         break;

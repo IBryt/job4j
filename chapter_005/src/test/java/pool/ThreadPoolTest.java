@@ -18,18 +18,17 @@ public class ThreadPoolTest {
         addExecute(2);
         addExecute(3);
         addExecute(4);
-        Thread.sleep(250);
+        pool.shutdown();
         assertThat(Arrays.asList(1, 2, 3, 4), containsInAnyOrder(queue.toArray()));
     }
     @Test
     public void whenAfterShutdownValueNotAdded() throws InterruptedException {
         addExecute(1);
         addExecute(2);
-        Thread.sleep(250);
         pool.shutdown();
+        Thread.yield();
         addExecute(3);
         addExecute(4);
-        Thread.sleep(250);
         assertThat(Arrays.asList(1, 2), containsInAnyOrder(queue.toArray()));
     }
 
