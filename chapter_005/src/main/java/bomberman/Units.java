@@ -1,19 +1,29 @@
 package bomberman;
 
-public final class Units {
-    private final String name;
-    private Cell cell;
+import net.jcip.annotations.GuardedBy;
+import net.jcip.annotations.ThreadSafe;
 
-    public Units(String name, Cell cell) {
+@ThreadSafe
+public final class Units {
+    @GuardedBy("this")
+    private final String name;
+    private volatile Cell cell;
+
+    public Units(final String name, final Cell cell) {
         this.name = name;
         this.cell = cell;
+
     }
 
     public Cell getCell() {
         return cell;
     }
 
-    public void setCell(Cell cell) {
+    public String getName() {
+        return name;
+    }
+
+    public void setCell(final Cell cell) {
         this.cell = cell;
     }
 }
