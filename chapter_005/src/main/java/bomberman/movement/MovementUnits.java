@@ -35,28 +35,44 @@ public abstract class MovementUnits implements Movement {
         if (!firstLock) {
             firstLockUnit();
         }
-        while (!board.getIsClose().get()) {
+        while (!board.isDeadHero() && !board.getIsClose().get()) {
             try {
                 Thread.sleep(1000);
+                if (unit.equals(board.getHero()) && board.getDeadHero()) {
+                    break;
+                }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             Cell src = unit.getCell();
             Cell dst = moveTo(src);
+            heroIsDead(dst);
             ReentrantLock lock = board.getCells().get(dst);
             try {
-                while (!lock.tryLock(500, TimeUnit.MILLISECONDS) && !board.getIsClose().get()) {
+                while (!board.isDeadHero() && !board.getIsClose().get() && !lock.tryLock(500, TimeUnit.MILLISECONDS)) {
                     changeDirection();
                     dst = moveTo(src);
                     lock = board.getCells().get(dst);
+                    heroIsDead(dst);
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            System.out.println(String.format("unit = %s, src = %s, dst = %s", unit.getName(), src, dst));
-            unit.setCell(dst);
-            board.getCells().get(src).unlock();
-        }
+            if (!board.isDeadHero()) {
+                System.out.println(String.format("unit = %s, src = %s, dst = %s", unit.getName(), src, dst));
+                unit.setCell(dst);
+                board.getCells().get(src).unlock();
+                if (!board.getHero().equals(unit)) {
+                    randomDirections();
+                }
+            }
+        };
+    }
+
+    private void heroIsDead(Cell dst) {
+        if (board.getHero().getCell().equals(dst)) {
+            board.setDeadHero(true);
+        };
     }
 
     private void firstLockUnit() {

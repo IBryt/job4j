@@ -24,6 +24,7 @@ public final class Board {
     private final Units hero;
     private final MovementHero movementHero;
     private final List<Movement> movements;
+    private volatile boolean deadHero = false;
 
     private Board(final int monsters, final int blockCell) {
         this.monsters = monsters;
@@ -34,9 +35,17 @@ public final class Board {
                 map(Map.Entry::getKey).collect(Collectors.toCollection(LinkedList<Cell>::new));
         this.hero = initHero(emptyCells);
         this.units = initUnits(emptyCells);
-        this.units.put(Board.HERO, getHero());
+       // this.units.put(Board.HERO, getHero());
         this.movements = initMovements();
         this.movementHero = findMovementHero();
+    }
+
+    public boolean isDeadHero() {
+        return deadHero;
+    }
+
+    public void setDeadHero(boolean deadHero) {
+        this.deadHero = deadHero;
     }
 
     public int getWidth() {
@@ -79,6 +88,10 @@ public final class Board {
         return movementHero;
     }
 
+    public boolean getDeadHero() {
+        return deadHero;
+    }
+
     private MovementHero findMovementHero() {
         Movement res = null;
         for (Movement m : movements) {
@@ -111,12 +124,12 @@ public final class Board {
 
     private int getRandomIntInRange(int max) {
         Random r = new Random();
-        return r.nextInt(max + 1);
+        return r.nextInt(max);
     }
 
     private Map<String, Units> initUnits(List<Cell> emptyCells) {
         Map<String, Units> units = new Hashtable<>();
-        for (int i = 1; i != monsters; i++) {
+        for (int i = 1; i != monsters + 1; i++) {
             String name = String.format("monster %d", i);
             units.put(name, getUnitRandomPosition(emptyCells, name));
         }
@@ -156,11 +169,20 @@ public final class Board {
     }
 
     public static void main(String[] args) {
-        final Board board = new Board(3, 6);
-        MovementHero movementHero = board.getMovementHero();
+        final Board board = new Board(6, 6);
+        MovementHero movementHero = new MovementHero(board, board.getHero());
         final HandlerMovements handler = new HandlerMovements(board);
         board.getMovements().stream().map((Movement m) -> (Runnable) m::move).forEach(handler::execute);
-        movementHero.directionTop();
+        Thread threadHero = new Thread() {
+            @Override
+            public void run() {
+                movementHero.move();
+                handler.close();
+                System.out.println("The hero is dead!");
+            }
+        };
+        threadHero.start();
+
 //        try {
 //            Thread.sleep(1600);
 //            handler.close();

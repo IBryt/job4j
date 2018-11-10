@@ -14,6 +14,5 @@ public class MovementMonsters extends MovementUnits {
     @Override
     public void move() {
         moveUnit();
-        randomDirections();
     }
 }
