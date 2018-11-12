@@ -20,7 +20,7 @@ public class SwitcherTest {
 
 
     @Before
-    public void init () {
+    public void init() {
         switcher = new Switcher();
         block1 = new AtomicBoolean(false);
         block2 = new AtomicBoolean(true);

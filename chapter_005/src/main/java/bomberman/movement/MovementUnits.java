@@ -38,7 +38,8 @@ public abstract class MovementUnits implements Movement {
         while (!board.isDeadHero() && !board.getIsClose().get()) {
             try {
                 Thread.sleep(1000);
-                if (unit.equals(board.getHero()) && board.getDeadHero()) {
+                heroIsDead();
+                if (board.getDeadHero()) {
                     break;
                 }
             } catch (InterruptedException e) {
@@ -46,14 +47,14 @@ public abstract class MovementUnits implements Movement {
             }
             Cell src = unit.getCell();
             Cell dst = moveTo(src);
-            heroIsDead(dst);
+            heroIsDead();
             ReentrantLock lock = board.getCells().get(dst);
             try {
                 while (!board.isDeadHero() && !board.getIsClose().get() && !lock.tryLock(500, TimeUnit.MILLISECONDS)) {
                     changeDirection();
                     dst = moveTo(src);
                     lock = board.getCells().get(dst);
-                    heroIsDead(dst);
+                    heroIsDead();
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -66,13 +67,14 @@ public abstract class MovementUnits implements Movement {
                     randomDirections();
                 }
             }
-        };
+        }
     }
 
-    private void heroIsDead(Cell dst) {
-        if (board.getHero().getCell().equals(dst)) {
+    private void heroIsDead() {
+        if (unit.equals(board.getHero())
+                && board.getCells().get(unit.getCell()).hasQueuedThreads()) {
             board.setDeadHero(true);
-        };
+        }
     }
 
     private void firstLockUnit() {

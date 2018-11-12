@@ -4,13 +4,13 @@ public class DeadLock {
     private static final CountDownLatch COUNT_DOWN_LATCH = new CountDownLatch(2);
 
     public static void main(String[] args) {
-        String s1= "1";
+        String s1 = "1";
         String s2 = "2";
         new Test(s1, s2).start();
         new Test(s2, s1).start();
     }
 
-    private static class Test extends Thread{
+    private static class Test extends Thread {
         String s1;
         String s2;
 
