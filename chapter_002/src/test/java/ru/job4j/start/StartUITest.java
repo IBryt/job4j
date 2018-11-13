@@ -15,19 +15,18 @@ import static org.junit.Assert.*;
 public class StartUITest {
     private Tracker tracker;
     private Item item;
-    private String id;
 
     @Before
     public void init() {
         tracker = new Tracker();
         item = new Item("test1", "testDescription");
+        item.setId("asd");
         tracker.add(item);
-        id = item.getId();
     }
 
     @After
     public void after() {
-        tracker.delete(id);
+        tracker.delete("asd");
     }
 
     @Test

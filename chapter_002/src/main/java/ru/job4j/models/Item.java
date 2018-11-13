@@ -23,6 +23,9 @@ public class Item {
 
 		Item item = (Item) o;
 
+		if (create != item.create) {
+			return false;
+		}
 		if (id != null ? !id.equals(item.id) : item.id != null) {
 			return false;
 		}
@@ -45,13 +48,6 @@ public class Item {
 		return result;
 	}
 
-	public Item(String id, String name, String description, String author) {
-		this.id = id;
-		this.name = name;
-		this.description = description;
-		this.author = author;
-		//this.create = create;
-	}
 	public Item(String name, String description) {
 		this.name = name;
 		this.description = description;
@@ -59,6 +55,14 @@ public class Item {
 	}
 
 	public Item(String name, String description, String author) {
+		this.name = name;
+		this.description = description;
+		this.author = author;
+		//this.create = create;
+	}
+
+	public Item(String id, String name, String description, String author) {
+		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.author = author;
@@ -76,11 +80,7 @@ public class Item {
 	public String getName() {
 		return this.name;
 	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
+	
 	public String getDescription() {
 		return this.description;
 	}
@@ -100,4 +100,8 @@ public class Item {
 	public void setId(String id) {
 		this.id = id;
 	}
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

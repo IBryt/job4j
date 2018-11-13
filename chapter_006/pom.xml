@@ -11,5 +11,17 @@
 
     <artifactId>chapter_006</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>ru.job4j</groupId>
+            <artifactId>chapter_001</artifactId>
+            <version>2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>ru.job4j</groupId>
+            <artifactId>chapter_002</artifactId>
+            <version>2.0</version>
+        </dependency>
+    </dependencies>
 
 </project>
