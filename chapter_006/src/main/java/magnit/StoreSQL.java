@@ -19,10 +19,10 @@ public class StoreSQL implements AutoCloseable, Closeable {
         if (!init()) {
             throw new SQLException("Connection is not created!");
         }
-        connection.setAutoCommit(false);
     }
 
     private void createConnection() throws SQLException {
+        DriverManager.getDrivers();
         connection = DriverManager.getConnection(
                 config.get("url"),
                 config.get("username"),
@@ -60,12 +60,15 @@ public class StoreSQL implements AutoCloseable, Closeable {
     }
 
     private void fillTable(int n) throws SQLException {
+        connection.setAutoCommit(false);
         try (PreparedStatement statement = connection.prepareStatement("INSERT INTO entry(field) VALUES (?)")) {
+            //connection.getMetaData().supportsSavepoints();
+            //connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
             for (int i = 1; i <= n; i++) {
                 statement.setInt(1, i);
                 statement.executeUpdate();
-                //connection.commit();
             }
+            connection.commit();
         } catch (SQLException e) {
             connection.rollback();
             LOG.error(e.getMessage(), e);
@@ -73,9 +76,10 @@ public class StoreSQL implements AutoCloseable, Closeable {
     }
 
     private void clearTable() throws SQLException {
+        connection.setAutoCommit(false);
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate("DELETE FROM entry");
-           // connection.commit();
+            connection.commit();
         } catch (SQLException e) {
             connection.rollback();
             LOG.error(e.getMessage(), e);
