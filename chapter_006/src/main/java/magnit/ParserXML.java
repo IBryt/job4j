@@ -24,11 +24,7 @@ public class ParserXML extends DefaultHandler {
            Handler handler = new Handler();
            xmlReader.setContentHandler(handler);
            xmlReader.parse(path);
-       } catch (IOException e) {
-           LOG.error(e.getMessage(), e);
-       } catch (ParserConfigurationException e) {
-           LOG.error(e.getMessage(), e);
-       } catch (SAXException e) {
+       } catch (Exception e) {
            LOG.error(e.getMessage(), e);
        }
        return list;
