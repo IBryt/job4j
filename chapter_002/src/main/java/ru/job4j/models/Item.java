@@ -5,7 +5,7 @@ public class Item {
 	private String id;
 	private String name;
 	private String description;
-	private long create;
+	//private long create;
 	private String author;
 
 	public Item() {
@@ -23,9 +23,6 @@ public class Item {
 
 		Item item = (Item) o;
 
-		if (create != item.create) {
-			return false;
-		}
 		if (id != null ? !id.equals(item.id) : item.id != null) {
 			return false;
 		}
@@ -43,7 +40,6 @@ public class Item {
 		int result = id != null ? id.hashCode() : 0;
 		result = 31 * result + (name != null ? name.hashCode() : 0);
 		result = 31 * result + (description != null ? description.hashCode() : 0);
-		result = 31 * result + (int) (create ^ (create >>> 32));
 		result = 31 * result + (author != null ? author.hashCode() : 0);
 		return result;
 	}
@@ -89,10 +85,6 @@ public class Item {
 		this.name = name;
 	}
 
-	public long getCreate() {
-		return this.create; 
-	}
-	
 	public String getId() {
 		return this.id; 
 	}
@@ -104,4 +96,9 @@ public class Item {
     public void setDescription(String description) {
         this.description = description;
     }
+
+	@Override
+	public String toString() {
+		return String.format("Item{id=%s, name=%s, description=%s, author=%s}", id, name, description, author);
+	}
 }

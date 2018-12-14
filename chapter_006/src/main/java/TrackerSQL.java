@@ -3,20 +3,42 @@ import org.slf4j.*;
 import ru.job4j.models.Item;
 import ru.job4j.start.ITracker;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
 import java.util.*;
 
-public class TrackerSQL implements ITracker, Cloneable {
+public class TrackerSQL implements ITracker, Closeable, AutoCloseable {
     private Connection connection;
     private static final Logger LOG = LoggerFactory.getLogger(TrackerSQL.class);
     private static final Random RN = new Random();
     private List<Item> items = new ArrayList<>();
-    private static final String CONFIG = "bd/app.properties";
+    private static final String CONFIG = "db/app.properties";
+
+    public TrackerSQL() {
+        if (connection == null) {
+            try (InputStream in = TrackerSQL.class.getClassLoader().getResourceAsStream(CONFIG)) {
+                Properties config = new Properties();
+                config.load(in);
+                Class.forName(config.getProperty("db.driver"));
+                connection = DriverManager.getConnection(
+                        config.getProperty("db.url"),
+                        config.getProperty("db.username"),
+                        config.getProperty("db.password")
+                );
+            } catch (Exception e) {
+                throw new IllegalStateException(e);
+            }
+        }
+    }
+
+    public TrackerSQL(Connection connection) {
+        this.connection = connection;
+    }
 
     public Item add(Item item) {
-        try (TrackerSQL.SQLConn sqlConn = new TrackerSQL.SQLConn()) {
-            PreparedStatement st = connection.prepareStatement("INSERT INTO items(name, description, author) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+        try (PreparedStatement st = connection.prepareStatement("INSERT INTO items(name, description, author) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
             st.setString(1, item.getName());
             st.setString(2, item.getDescription());
             st.setString(3, item.getAuthor());
@@ -44,8 +66,7 @@ public class TrackerSQL implements ITracker, Cloneable {
     }
 
     public void edit(Item fresh) {
-        try (TrackerSQL.SQLConn sqlConn = new TrackerSQL.SQLConn()) {
-            PreparedStatement st = connection.prepareStatement("UPDATE items SET name = ?, description = ? WHERE id = ?");
+        try (PreparedStatement st = connection.prepareStatement("UPDATE items SET name = ?, description = ? WHERE id = ?");) {
             st.setString(1, fresh.getName());
             st.setString(2, fresh.getDescription());
             st.setInt(3, Integer.parseInt(fresh.getId()));
@@ -57,8 +78,7 @@ public class TrackerSQL implements ITracker, Cloneable {
     }
 
     public void delete(String id) {
-        try (TrackerSQL.SQLConn sqlConn = new TrackerSQL.SQLConn()) {
-            PreparedStatement st = connection.prepareStatement("DELETE FROM items WHERE id = ?");
+        try (PreparedStatement st = connection.prepareStatement("DELETE FROM items WHERE id = ?")) {
             st.setInt(1, Integer.parseInt(id));
             st.executeUpdate();
             st.close();
@@ -69,8 +89,7 @@ public class TrackerSQL implements ITracker, Cloneable {
 
     public List<Item> getAll() {
         ArrayList<Item> list = new ArrayList<>();
-        try (TrackerSQL.SQLConn sqlConn = new TrackerSQL.SQLConn()) {
-            Statement st = connection.createStatement();
+        try (Statement st = connection.createStatement()) {
             ResultSet rs = st.executeQuery("SELECT * FROM items");
             while (rs.next())		{
                 list.add(new Item(String.valueOf(rs.getInt("id")),
@@ -88,8 +107,7 @@ public class TrackerSQL implements ITracker, Cloneable {
 
     public Item findById(String id) {
         Item item = Item.EMPTY;
-        try (TrackerSQL.SQLConn sqlConn = new TrackerSQL.SQLConn()) {
-            PreparedStatement st = connection.prepareStatement("SELECT * FROM items WHERE id = ?");
+        try (PreparedStatement st = connection.prepareStatement("SELECT * FROM items WHERE id = ?")) {
             st.setInt(1, Integer.parseInt(id));
             ResultSet rs = st.executeQuery();
             if (rs.next())		{
@@ -107,8 +125,7 @@ public class TrackerSQL implements ITracker, Cloneable {
 
     public Item findByName(String name) {
         Item item = Item.EMPTY;
-        try (TrackerSQL.SQLConn sqlConn = new TrackerSQL.SQLConn()) {
-            PreparedStatement st = connection.prepareStatement("SELECT * FROM items WHERE name = ?");
+        try (PreparedStatement st = connection.prepareStatement("SELECT * FROM items WHERE name = ?")) {
             st.setString(1, name);
             ResultSet rs = st.executeQuery();
             if (rs.next())		{
@@ -124,32 +141,15 @@ public class TrackerSQL implements ITracker, Cloneable {
         return item;
     }
 
-    private class SQLConn implements AutoCloseable {
-        public SQLConn() {
-            try (InputStream in = TrackerSQL.SQLConn.class.getClassLoader().getResourceAsStream(CONFIG)) {
-                Properties config = new Properties();
-                config.load(in);
-                Class.forName(config.getProperty("driver-class-name"));
-                connection = DriverManager.getConnection(
-                        config.getProperty("url"),
-                        config.getProperty("user"),
-                        config.getProperty("password")
-                );
-            } catch (Exception e) {
-                throw new IllegalStateException(e);
+    @Override
+    public void close() throws IOException {
+        if (connection != null) {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                LOG.error(e.getMessage(), e);
             }
         }
-
-        @Override
-        public void close() throws Exception {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    LOG.error(e.getMessage(), e);
-                }
-            }
-            connection = null;
-        }
+        connection = null;
     }
 }
