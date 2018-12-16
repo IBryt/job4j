@@ -17,7 +17,7 @@ public class SQLExecute {
 
     public void execute() {
         Entries parse = new Parsing().execute();
-         try (StoreSQL sql = new StoreSQL(new Config()) {
+        try (StoreSQL sql = new StoreSQL(new Config()) {
             @Override
             public void execute() throws SQLException {
                 try {
@@ -30,7 +30,7 @@ public class SQLExecute {
         }) {
             sql.execute();
         } catch (SQLException e) {
-             LOG.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
     }
 
@@ -41,19 +41,25 @@ public class SQLExecute {
             connection.commit();
         }
         LOG.info("очистка выполнена");
-      }
+    }
 
     private void fill(Connection connection, Entries parse) throws SQLException {
         connection.setAutoCommit(false);
-        for (Entry e : parse.getEntries()) {
-            try (PreparedStatement statement = connection.prepareStatement("INSERT INTO vacancy(id, name, text, link) VALUES ((?),(?),(?),(?))")) {
+        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO vacancy(id, name, text, link) VALUES ((?),(?),(?),(?))")) {
+            for (int i = 0; i < parse.getEntries().size(); i++) {
+                Entry e = parse.getEntries().get(i);
                 statement.setInt(1, e.getId());
                 statement.setString(2, e.getName());
                 statement.setString(3, e.getText());
                 statement.setString(4, e.getLink());
-                statement.executeUpdate();
+                if (i % 100 == 0) {
+                    statement.executeBatch();
+                    statement.clearBatch();
+                }
+                statement.addBatch();
                 LOG.info(e.toString());
             }
+            statement.executeBatch();
             connection.commit();
         }
     }

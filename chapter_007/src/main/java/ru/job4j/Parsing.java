@@ -18,6 +18,9 @@ public class Parsing {
     private static final Logger LOG = LoggerFactory.getLogger(Parsing.class);
     private final Locale locale = new Locale.Builder().setLanguage("ru").setScript("Cyrl").build();
     private final DateFormat df = new SimpleDateFormat("dd MMM yy, kk:mm", locale);
+    private List<String> ignoreDate  = Arrays.asList("сегодня", "вчера", "22 янв 16, 10:56", "11 фев 09, 00:03");
+    private List<String> findValue = Arrays.asList("java");
+    private List<String> ignoreValue = Arrays.asList("javascript", "java script");
 
     public Entries execute() {
         Date dateBefore = getDateBefore();
@@ -59,7 +62,7 @@ public class Parsing {
             List<String> list = tr.select("td").eachText();
             if (list.size() >= 5) {
                 String target = list.get(4);
-                if (!target.contains("сегодня") && !target.contains("вчера") && !target.equals("22 янв 16, 10:56") && !target.equals("11 фев 09, 00:03")) {
+                if (!ignoreDate.stream().anyMatch(target::contains)) {
                     date = df.parse(target);
                 }
             }
@@ -80,8 +83,8 @@ public class Parsing {
         return calendar.getTime();
     }
 
-    private boolean checkHead(String head) {
-       return head.contains("java") && !(head.contains("javascript") || head.contains("java script"));
+    private boolean checkHead(final String head) {
+        return findValue.stream().anyMatch(head::contains) && !ignoreValue.stream().anyMatch(head::contains);
     }
 
     private Entry createEntry(Element node) throws IOException {
