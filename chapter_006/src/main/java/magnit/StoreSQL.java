@@ -66,13 +66,15 @@ public class StoreSQL implements AutoCloseable, Closeable {
             //connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
             for (int i = 1; i <= n; i++) {
                 statement.setInt(1, i);
-                statement.executeUpdate();
+                statement.addBatch();
             }
+            statement.executeBatch();
             connection.commit();
         } catch (SQLException e) {
             connection.rollback();
             LOG.error(e.getMessage(), e);
         }
+        connection.setAutoCommit(true);
     }
 
     private void clearTable() throws SQLException {
@@ -84,6 +86,7 @@ public class StoreSQL implements AutoCloseable, Closeable {
             connection.rollback();
             LOG.error(e.getMessage(), e);
         }
+        connection.setAutoCommit(true);
     }
 
     @Override
