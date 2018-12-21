@@ -1,6 +1,6 @@
 package ru.job4j.persistent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import ru.job4j.model.User;
 
 import java.io.Closeable;
@@ -14,7 +14,7 @@ import java.util.Properties;
 public class MemoryStore implements Store<User>, AutoCloseable, Closeable {
     private static final MemoryStore INSTANCE = new MemoryStore();
     private static final String CONFIG = "application.properties";
-    private static final Logger LOG = LoggerFactory.getLogger(MemoryStore.class);
+    private static final Logger LOG = LogManager.getLogger(MemoryStore.class.getName());
     private Connection connection;
 
     private MemoryStore(Connection connection) {
@@ -32,6 +32,11 @@ public class MemoryStore implements Store<User>, AutoCloseable, Closeable {
             Properties config = new Properties();
             config.load(in);
             Class.forName(config.getProperty("db.driver"));
+            LOG.trace("trace message");
+            LOG.debug("debug message");
+            LOG.info("info message");
+            LOG.warn("warn message");
+            LOG.error("error message");
             connection = DriverManager.getConnection(
                     config.getProperty("db.url"),
                     config.getProperty("db.username"),
