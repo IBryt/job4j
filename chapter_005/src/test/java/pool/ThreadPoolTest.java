@@ -1,16 +1,23 @@
 package pool;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 
 import static org.junit.Assert.*;
 public class ThreadPoolTest {
-    private ThreadPool pool = new ThreadPool();
-    private Queue<Integer> queue =  new ConcurrentLinkedQueue();
+    private ThreadPool pool;
+    private Queue<Integer> queue =  new ArrayBlockingQueue(100);
+
+    @Before
+    public void init() {
+        pool = new ThreadPool();
+    }
 
     @Test
     public void whenAdded4ValueInPoolThenQueueContainsThisValue() throws InterruptedException {

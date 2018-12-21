@@ -1,13 +1,13 @@
 package pool;
 
+import blocking.SimpleBlockingQueue;
+
 import java.util.*;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Executor;
-import java.util.concurrent.TimeUnit;
 
 public class ThreadPool implements Executor {
     private final List<Thread> threads = new LinkedList<>();
-    private volatile ArrayBlockingQueue<Runnable> tasks = new ArrayBlockingQueue(100);
+    private volatile SimpleBlockingQueue<Runnable> tasks = new SimpleBlockingQueue<>();
     private volatile boolean isRunning = true;
 
     public ThreadPool() {
@@ -22,7 +22,7 @@ public class ThreadPool implements Executor {
         isRunning = false;
         while (!close()) {
             try {
-                Thread.sleep(100);
+                Thread.currentThread().sleep(1);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -32,7 +32,8 @@ public class ThreadPool implements Executor {
     private boolean close() {
         boolean res = true;
         for (Thread thread : threads) {
-            if (thread.isAlive()) {
+            thread.interrupt();
+            if (thread.isInterrupted()) {
                 res = false;
                 break;
             }
@@ -51,17 +52,15 @@ public class ThreadPool implements Executor {
 
         @Override
         public void run() {
-            while (isRunning) {
-                Runnable nextTask = null;
+            while (!Thread.currentThread().isInterrupted()) {
                 try {
-                    nextTask = tasks.poll(100, TimeUnit.MILLISECONDS);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                if (nextTask != null) {
+                    Runnable nextTask = tasks.poll();
                     nextTask.run();
+                } catch (InterruptedException e) {
+                   Thread.currentThread().interrupt();
                 }
             }
+            Thread.currentThread().interrupt();
         }
     }
 }

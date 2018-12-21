@@ -63,7 +63,7 @@ public class SwitcherTest {
         while (count.get() < SIZE) {
             while (!current.get()
                     && !lock.isLocked()
-                    && lock.tryLock(100, TimeUnit.MILLISECONDS)) {
+                    && lock.tryLock()) {
                 count.incrementAndGet();
                 for (int i = 0; i < 10; i++) {
                     switcher.addValue(value);
