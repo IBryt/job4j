@@ -32,11 +32,6 @@ public class MemoryStore implements Store<User>, AutoCloseable, Closeable {
             Properties config = new Properties();
             config.load(in);
             Class.forName(config.getProperty("db.driver"));
-            LOG.trace("trace message");
-            LOG.debug("debug message");
-            LOG.info("info message");
-            LOG.warn("warn message");
-            LOG.error("error message");
             connection = DriverManager.getConnection(
                     config.getProperty("db.url"),
                     config.getProperty("db.username"),

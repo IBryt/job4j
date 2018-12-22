@@ -3,6 +3,7 @@ package ru.job4j.model;
 import java.sql.Timestamp;
 
 public final class User {
+    public final static User EMPTY = new User();
     private int id;
     private String name;
     private String login;
@@ -22,6 +23,10 @@ public final class User {
         this.login = login;
         this.email = email;
         this.createDate = createDate;
+    }
+
+    public User() {
+
     }
 
     @Override

@@ -1,7 +1,8 @@
 package ru.job4j.servlets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import ru.job4j.logic.ValidateService;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -10,7 +11,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 public class EchoServlet extends HttpServlet {
-    private static final Logger LOG = LoggerFactory.getLogger(EchoServlet.class);
+    private static final Logger LOG = LogManager.getLogger(EchoServlet.class.getName());
+    private final ValidateService logic = ValidateService.getInstance();
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
         res.setContentType("text/html");

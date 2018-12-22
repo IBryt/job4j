@@ -22,11 +22,10 @@ public class ValidateService {
         return res;
     }
 
-    public boolean update(final int id, final String name) {
+    public boolean update(final User user) {
         boolean res = false;
-        User user = store.findById(id);
-        if (user != null && name != null && !user.getName().equals(name)) {
-            user.setName(name);
+        if (user != null && user != null) {
+
             res = store.update(user);
         }
         return res;

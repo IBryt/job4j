@@ -1,7 +1,7 @@
 package ru.job4j.servlets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import ru.job4j.logic.ValidateService;
 import ru.job4j.model.User;
 
@@ -13,21 +13,43 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Timestamp;
 import java.util.Date;
-import java.util.Hashtable;
-import java.util.Map;
 
 
 public class UserServlet extends HttpServlet {
-    private static final Logger LOG = LoggerFactory.getLogger(EchoServlet.class);
+    private static final Logger LOG = LogManager.getLogger(EchoServlet.class.getName());
     private final ValidateService logic = ValidateService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
         PrintWriter writer = new PrintWriter(resp.getOutputStream());
-        logic.findAll().entrySet().stream().map(entry -> entry.getValue().toString()).forEach(s ->
-                writer.append(s).append("<br>")
+        StringBuilder builder = new StringBuilder("<table>");
+        logic.findAll().entrySet().stream().map(entry -> entry.getValue()).forEach(s ->
+                builder.append("<tr><td>")
+                .append(s.toString())
+                .append("<form action=" + req.getContextPath() + "/edit?id=" + s.getId() + " method='get'>")
+                .append("<input type='hidden' name='id' value=" + s.getId() + ">")
+                .append("<input type='submit' value='edit'>")
+                .append("</form>")
+                .append("<form action=" + req.getContextPath() + "/list method='post'>")
+                .append("<input type='hidden' name='id' value=" + s.getId() + ">")
+                .append("<input type='hidden' name='action' value='delete'>")
+                .append("<input type='submit' value='delete'>")
+                .append("</form>")
+                .append("</td></tr>")
         );
+        builder.append("</table>");
+        writer.append("<!DOCTYPE html>\n"
+                + "<html lang=\"en\">\n"
+                + "<head>\n"
+                + "    <meta charset=\"UTF-8\">\n"
+                + "    <title>Title</title>\n"
+                + "</head>\n"
+                + "<body>\n"
+                + builder.toString()
+                + "</body>\n"
+                + "</html>");
+
         writer.flush();
     }
 
@@ -45,8 +67,9 @@ public class UserServlet extends HttpServlet {
         }
         if ("update".equals(req.getParameter("action"))) {
             int id = Integer.parseInt(req.getParameter("id"));
-            String name = req.getParameter("name");
-            logic.update(id, name);
+            User user = logic.findById(id);
+            user.setName(req.getParameter("name"));
+            logic.update(user);
         }
         if ("delete".equals(req.getParameter("action"))) {
             int id = Integer.parseInt(req.getParameter("id"));
