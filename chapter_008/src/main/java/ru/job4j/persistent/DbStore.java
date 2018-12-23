@@ -18,7 +18,7 @@ public class DbStore implements Store<User> {
     private static final BasicDataSource SOURCE = new BasicDataSource();
     private static final DbStore INSTANCE = new DbStore();
     private static final String CONFIG = "application.properties";
-    private static final Logger LOG = LogManager.getLogger(MemoryStore.class.getName());
+    private static final Logger LOG = LogManager.getLogger(DbStore.class.getName());
 
     public static Store<User> getInstance() {
         return INSTANCE;
