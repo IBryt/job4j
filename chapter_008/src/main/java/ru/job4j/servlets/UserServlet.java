@@ -20,43 +20,10 @@ public class UserServlet extends HttpServlet {
     private final ValidateService logic = ValidateService.getInstance();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/html");
-        PrintWriter writer = new PrintWriter(resp.getOutputStream());
-        StringBuilder builder = new StringBuilder("<table>");
-        logic.findAll().entrySet().stream().map(entry -> entry.getValue()).forEach(s ->
-                builder.append("<tr><td>")
-                .append(s.toString())
-                .append("<form action=" + req.getContextPath() + "/edit?id=" + s.getId() + " method='get'>")
-                .append("<input type='hidden' name='id' value=" + s.getId() + ">")
-                .append("<input type='submit' value='edit'>")
-                .append("</form>")
-                .append("<form action=" + req.getContextPath() + "/list method='post'>")
-                .append("<input type='hidden' name='id' value=" + s.getId() + ">")
-                .append("<input type='hidden' name='action' value='delete'>")
-                .append("<input type='submit' value='delete'>")
-                .append("</form>")
-                .append("</td></tr>")
-        );
-        builder.append("</table>");
-        writer.append("<!DOCTYPE html>\n"
-                + "<html lang=\"en\">\n"
-                + "<head>\n"
-                + "    <meta charset=\"UTF-8\">\n"
-                + "    <title>Title</title>\n"
-                + "</head>\n"
-                + "<body>\n"
-                + builder.toString()
-                + "</body>\n"
-                + "</html>");
-
-        writer.flush();
-    }
-
-    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         operations(req);
-        doGet(req, resp);
+        //doGet(req, resp);
+        resp.sendRedirect(req.getContextPath());
     }
 
     private void operations(HttpServletRequest req) {
