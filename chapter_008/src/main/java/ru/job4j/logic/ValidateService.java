@@ -3,12 +3,14 @@ package ru.job4j.logic;
 import ru.job4j.model.User;
 
 import java.util.Map;
+
+import ru.job4j.persistent.DbStore;
 import ru.job4j.persistent.MemoryStore;
 import ru.job4j.persistent.Store;
 
 public class ValidateService {
     private static final ValidateService INSTANCE = new ValidateService();
-    private final Store<User> store = MemoryStore.getInstance();
+    private final Store<User> store = DbStore.getInstance();
     private ValidateService() { }
     public static ValidateService getInstance() {
         return INSTANCE;
