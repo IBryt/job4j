@@ -16,4 +16,5 @@ public interface Store<T>  {
 
     User findById(int id);
 
+    boolean checkUnique(T t);
 }

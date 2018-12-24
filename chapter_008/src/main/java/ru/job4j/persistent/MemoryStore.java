@@ -145,6 +145,28 @@ public class MemoryStore implements Store<User>, AutoCloseable, Closeable {
         return user;
     }
 
+    /**
+     * @return true if user exists with such name or login and ignore current entry;
+     */
+    @Override
+    public boolean checkUnique(User user) {
+        boolean res = false;
+        try (MemoryStore memoryStore = new MemoryStore(getConnection())) {
+            try (PreparedStatement st = connection.prepareStatement("SELECT * FROM Users WHERE (login = ? OR email = ?) AND id != ?")) {
+                st.setString(1, user.getLogin());
+                st.setString(2, user.getEmail());
+                st.setInt(3, user.getId());
+                ResultSet rs = st.executeQuery();
+                if (rs.next()) {
+                    res = true;
+                }
+            }
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+        }
+        return res;
+    }
+
     @Override
     public void close() {
         if (connection != null) {

@@ -5,7 +5,6 @@ import ru.job4j.model.User;
 import java.util.Map;
 
 import ru.job4j.persistent.DbStore;
-import ru.job4j.persistent.MemoryStore;
 import ru.job4j.persistent.Store;
 
 public class ValidateService {
@@ -18,7 +17,7 @@ public class ValidateService {
 
     public boolean add(final User user) {
         boolean res = false;
-        if (user.getName() != null && !user.getName().equals("")) {
+        if (checkUserNameLogin(user)) {
             res = store.add(user);
         }
         return res;
@@ -26,11 +25,19 @@ public class ValidateService {
 
     public boolean update(final User user) {
         boolean res = false;
-        if (user != null && user != null) {
-
+        if (checkUserNameLogin(user)) {
             res = store.update(user);
         }
         return res;
+    }
+
+    private boolean checkUserNameLogin(User user) {
+        return user != null
+                && user.getName() != null
+                && !user.getName().equals("")
+                && user.getLogin() != null
+                && !user.getLogin().equals("")
+                && !store.checkUnique(user);
     }
 
     public boolean delete(final int id) {
@@ -45,5 +52,4 @@ public class ValidateService {
     public User findById(final int id) {
         return store.findById(id);
     }
-
 }

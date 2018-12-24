@@ -117,6 +117,28 @@ public class DbStore implements Store<User> {
         return users;
     }
 
+    /**
+     * @return true if user exists with such name or login and ignore current entry;
+     */
+    @Override
+    public boolean checkUnique(User user) {
+        boolean res = false;
+        try (Connection connection = SOURCE.getConnection()) {
+            try (PreparedStatement st = connection.prepareStatement("SELECT * FROM Users WHERE (login = ? OR email = ?) AND id != ?")) {
+                st.setString(1, user.getLogin());
+                st.setString(2, user.getEmail());
+                st.setInt(3, user.getId());
+                ResultSet rs = st.executeQuery();
+                if (rs.next()) {
+                    res = true;
+                }
+            }
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+        }
+        return res;
+    }
+
     @Override
     public User findById(int id) {
         User user = null;
