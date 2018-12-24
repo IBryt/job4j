@@ -14,9 +14,14 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Date;
 
-public class UserCreateServlet extends HttpServlet {
-    private static final Logger LOG = LogManager.getLogger(UserCreateServlet.class.getName());
+public class UserCreateController extends HttpServlet {
+    private static final Logger LOG = LogManager.getLogger(UserCreateController.class.getName());
     private final ValidateService logic = ValidateService.getInstance();
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.getRequestDispatcher("/WEB-INF/views/UserCreateServlet.jsp").forward(req, resp);
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

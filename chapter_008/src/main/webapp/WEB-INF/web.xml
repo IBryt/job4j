@@ -5,21 +5,8 @@
          http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
          version="2.4">
     <servlet>
-        <servlet-name>EchoServlet</servlet-name>
-        <servlet-class>ru.job4j.servlets.EchoServlet</servlet-class>
-        <init-param>
-            <param-name>debug</param-name>
-            <param-value>true</param-value>
-        </init-param>
-        <load-on-startup>-1</load-on-startup>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>EchoServlet</servlet-name>
-        <url-pattern>/echo</url-pattern>
-    </servlet-mapping>
-    <servlet>
-        <servlet-name>UserServlet</servlet-name>
-        <servlet-class>ru.job4j.servlets.UserServlet</servlet-class>
+        <servlet-name>UserController</servlet-name>
+        <servlet-class>ru.job4j.servlets.UserController</servlet-class>
         <init-param>
             <param-name>debug</param-name>
             <param-value>true</param-value>
@@ -27,12 +14,12 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
-        <servlet-name>UserServlet</servlet-name>
-        <url-pattern>/list</url-pattern>
+        <servlet-name>UserController</servlet-name>
+        <url-pattern>/</url-pattern>
     </servlet-mapping>
     <servlet>
-        <servlet-name>UserCreateServlet</servlet-name>
-        <servlet-class>ru.job4j.servlets.UserCreateServlet</servlet-class>
+        <servlet-name>UserCreateController</servlet-name>
+        <servlet-class>ru.job4j.servlets.UserCreateController</servlet-class>
         <init-param>
             <param-name>debug</param-name>
             <param-value>true</param-value>
@@ -40,12 +27,12 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
-        <servlet-name>UserCreateServlet</servlet-name>
+        <servlet-name>UserCreateController</servlet-name>
         <url-pattern>/create</url-pattern>
     </servlet-mapping>
     <servlet>
-        <servlet-name>UserUpdateServlet</servlet-name>
-        <servlet-class>ru.job4j.servlets.UserUpdateServlet</servlet-class>
+        <servlet-name>UserUpdateController</servlet-name>
+        <servlet-class>ru.job4j.servlets.UserUpdateController</servlet-class>
         <init-param>
             <param-name>debug</param-name>
             <param-value>true</param-value>
@@ -53,7 +40,7 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
-        <servlet-name>UserUpdateServlet</servlet-name>
+        <servlet-name>UserUpdateController</servlet-name>
         <url-pattern>/edit</url-pattern>
     </servlet-mapping>
 </web-app>

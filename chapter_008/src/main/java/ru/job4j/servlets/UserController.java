@@ -15,9 +15,15 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 
-public class UserServlet extends HttpServlet {
-    private static final Logger LOG = LogManager.getLogger(EchoServlet.class.getName());
+public class UserController extends HttpServlet {
+    private static final Logger LOG = LogManager.getLogger(UserController.class.getName());
     private final ValidateService logic = ValidateService.getInstance();
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setAttribute("users", logic.findAll());
+        req.getRequestDispatcher("/WEB-INF/views/index.jsp").forward(req, resp);
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

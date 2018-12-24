@@ -11,9 +11,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class UserUpdateServlet extends HttpServlet {
-    private static final Logger LOG = LogManager.getLogger(UserUpdateServlet.class.getName());
+public class UserUpdateController extends HttpServlet {
+    private static final Logger LOG = LogManager.getLogger(UserUpdateController.class.getName());
     private final ValidateService logic = ValidateService.getInstance();
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        User user = logic.findById(Integer.parseInt(req.getParameter("id")));
+        if (user != null) {
+            req.setAttribute("user", user);
+            req.getRequestDispatcher("/WEB-INF/views/UserUpdateServlet.jsp").forward(req, resp);
+        }
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
