@@ -39,7 +39,7 @@ public class DbStore implements Store<User> {
         }
     }
     @Override
-    public synchronized boolean add(User user) {
+    public boolean add(User user) {
         boolean res = false;
         try (Connection connection = SOURCE.getConnection()) {
             try (PreparedStatement st = connection.prepareStatement("INSERT INTO users(name, login, email, date) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
@@ -61,7 +61,7 @@ public class DbStore implements Store<User> {
     }
 
     @Override
-    public synchronized boolean update(User user) {
+    public boolean update(User user) {
         try (Connection connection = SOURCE.getConnection()) {
             try (PreparedStatement st = connection.prepareStatement("UPDATE users SET name = ?, login = ?, email = ?, date = ? WHERE id = ?")) {
                 st.setString(1, user.getName());
@@ -78,7 +78,7 @@ public class DbStore implements Store<User> {
     }
 
     @Override
-    public synchronized boolean delete(User user) {
+    public boolean delete(User user) {
         boolean res = false;
         try (Connection connection = SOURCE.getConnection()) {
             try (PreparedStatement st = connection.prepareStatement("DELETE FROM users WHERE id = ?")) {
