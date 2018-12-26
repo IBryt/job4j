@@ -9,6 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Timestamp;
@@ -28,16 +29,10 @@ public class UserController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         operations(req);
-        //doGet(req, resp);
-        resp.sendRedirect(req.getContextPath());
+        resp.sendRedirect(String.format("%s/", req.getContextPath()));
     }
 
     private void operations(HttpServletRequest req) {
-        if ("add".equals(req.getParameter("action"))) {
-            String name = req.getParameter("name");
-            User user = new User(name, "login", "email", new Timestamp(new Date().getTime()));
-            logic.add(user);
-        }
         if ("update".equals(req.getParameter("action"))) {
             int id = Integer.parseInt(req.getParameter("id"));
             User user = logic.findById(id);

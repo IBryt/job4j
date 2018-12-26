@@ -4,6 +4,7 @@ package ru.job4j.servlets;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import ru.job4j.logic.ValidateService;
+import ru.job4j.model.Role;
 import ru.job4j.model.User;
 
 import javax.servlet.ServletException;
@@ -20,13 +21,14 @@ public class UserCreateController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setAttribute("roles", logic.getRoles());
         req.getRequestDispatcher("/WEB-INF/views/UserCreateServlet.jsp").forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         operations(req);
-        resp.sendRedirect(req.getContextPath());
+        resp.sendRedirect(String.format("%s/", req.getContextPath()));
     }
 
 
@@ -35,7 +37,8 @@ public class UserCreateController extends HttpServlet {
             String name = req.getParameter("name");
             String login = req.getParameter("login");
             String email = req.getParameter("email");
-            User user = new User(name, login, email, new Timestamp(new Date().getTime()));
+            Role role = logic.getRoleById(Integer.parseInt(req.getParameter("role")));
+            User user = new User(name, login, email, new Timestamp(new Date().getTime()), role);
             logic.add(user);
         }
     }

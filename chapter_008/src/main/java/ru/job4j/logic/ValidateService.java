@@ -1,7 +1,9 @@
 package ru.job4j.logic;
 
+import ru.job4j.model.Role;
 import ru.job4j.model.User;
 
+import java.util.List;
 import java.util.Map;
 
 import ru.job4j.persistent.DbStore;
@@ -51,5 +53,16 @@ public class ValidateService {
 
     public User findById(final int id) {
         return store.findById(id);
+    }
+
+    public User isCredentional(String login, String password) {
+        return store.isCredentional(login, password);
+    }
+
+    public List<Role> getRoles() {
+        return store.getRoles();
+    }
+    public Role getRoleById(int id) {
+        return store.getRoleById(id);
     }
 }

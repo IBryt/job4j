@@ -3,6 +3,7 @@ package ru.job4j.persistent;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.job4j.model.Role;
 import ru.job4j.model.User;
 
 import java.io.InputStream;
@@ -10,9 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 public class DbStore implements Store<User> {
     private static final BasicDataSource SOURCE = new BasicDataSource();
@@ -24,7 +23,7 @@ public class DbStore implements Store<User> {
         return INSTANCE;
     }
     private DbStore() {
-        try (InputStream in = MemoryStore.class.getClassLoader().getResourceAsStream(CONFIG)) {
+        try (InputStream in = DbStore.class.getClassLoader().getResourceAsStream(CONFIG)) {
             Properties config = new Properties();
             config.load(in);
             SOURCE.setDriverClassName(config.getProperty("db.driver"));
@@ -42,11 +41,13 @@ public class DbStore implements Store<User> {
     public boolean add(User user) {
         boolean res = false;
         try (Connection connection = SOURCE.getConnection()) {
-            try (PreparedStatement st = connection.prepareStatement("INSERT INTO users(name, login, email, date) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
+            try (PreparedStatement st = connection.prepareStatement("INSERT INTO users(name, login, email, date, password, role_id) VALUES (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
                 st.setString(1, user.getName());
                 st.setString(2, user.getLogin());
                 st.setString(3, user.getEmail());
                 st.setTimestamp(4, user.getCreateDate());
+                st.setString(5, user.getPassword());
+                st.setInt(6, user.getRole().getId());
                 st.executeUpdate();
                 ResultSet generatedKeys = st.getGeneratedKeys();
                 if (generatedKeys.next()) {
@@ -63,12 +64,14 @@ public class DbStore implements Store<User> {
     @Override
     public boolean update(User user) {
         try (Connection connection = SOURCE.getConnection()) {
-            try (PreparedStatement st = connection.prepareStatement("UPDATE users SET name = ?, login = ?, email = ?, date = ? WHERE id = ?")) {
+            try (PreparedStatement st = connection.prepareStatement("UPDATE users SET name = ?, login = ?, email = ?, date = ?, password = ?, role_id = ? WHERE id = ?")) {
                 st.setString(1, user.getName());
                 st.setString(2, user.getLogin());
                 st.setString(3, user.getEmail());
                 st.setTimestamp(4, user.getCreateDate());
-                st.setInt(5, user.getId());
+                st.setString(5, user.getPassword());
+                st.setInt(6, user.getRole().getId());
+                st.setInt(7, user.getId());
                 st.executeUpdate();
             }
         } catch (Exception e) {
@@ -106,7 +109,9 @@ public class DbStore implements Store<User> {
                                     rs.getString("name"),
                                     rs.getString("login"),
                                     rs.getString("email"),
-                                    rs.getTimestamp("date")
+                                    rs.getTimestamp("date"),
+                                    rs.getString("password"),
+                                    getRoleById(rs.getInt("role_id"))
                             )
                     );
                 }
@@ -152,7 +157,9 @@ public class DbStore implements Store<User> {
                             rs.getString("name"),
                             rs.getString("login"),
                             rs.getString("email"),
-                            rs.getTimestamp("date")
+                            rs.getTimestamp("date"),
+                            rs.getString("password"),
+                            getRoleById(rs.getInt("role_id"))
                     );
                 }
             }
@@ -160,5 +167,69 @@ public class DbStore implements Store<User> {
             LOG.error(e.getMessage(), e);
         }
         return user;
+    }
+
+    @Override
+    public User isCredentional(String login, String password) {
+        User user = null;
+        try (Connection connection = SOURCE.getConnection()) {
+            try (PreparedStatement st = connection.prepareStatement("SELECT * FROM Users WHERE login = ? AND password = ?")) {
+                st.setString(1, login);
+                st.setString(2, password);
+                ResultSet rs = st.executeQuery();
+                if (rs.next()) {
+                    user = new User(
+                            rs.getInt("id"),
+                            rs.getString("name"),
+                            rs.getString("login"),
+                            rs.getString("email"),
+                            rs.getTimestamp("date"),
+                            rs.getString("password"),
+                            getRoleById(rs.getInt("role_id"))
+                    );
+                }
+            }
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+        }
+        return user;
+    }
+
+    @Override
+    public List<Role> getRoles() {
+        List<Role> roles = new ArrayList<>();
+        try (Connection connection = SOURCE.getConnection()) {
+            try (Statement st = connection.createStatement()) {
+                ResultSet rs = st.executeQuery("SELECT * FROM Role");
+                while (rs.next()) {
+                    roles.add(new Role(
+                                    rs.getInt("id"),
+                                    rs.getString("name"),
+                                    rs.getBoolean("editAll")
+                            )
+                    );
+                }
+            }
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+        }
+        return roles;
+    }
+
+    @Override
+    public Role getRoleById(int id) {
+        Role role = null;
+        try (Connection connection = SOURCE.getConnection()) {
+            try (PreparedStatement st = connection.prepareStatement("SELECT * FROM role WHERE id = ?")) {
+                st.setInt(1, id);
+                ResultSet rs = st.executeQuery();
+                if (rs.next()) {
+                    role = new Role(rs.getInt("id"), rs.getString("name"), rs.getBoolean("editAll"));
+                }
+            }
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+        }
+        return role;
     }
 }

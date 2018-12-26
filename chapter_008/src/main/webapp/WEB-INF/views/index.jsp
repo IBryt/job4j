@@ -8,6 +8,14 @@
 <table style="border: 1px solid black;" cellpadding="1" cellspacing="1" border="1">
     <br>
     <a href="${pageContext.servletContext.contextPath}/create">Create</a>
+    <br>
+    <a href="${pageContext.servletContext.contextPath}/signin">signin</a>
+    <br>
+    <c:if test="${error != ''}">
+        <div style="background: red">
+            <c:out value="${error}"></c:out>
+        </div>
+    </c:if>
     <tr>
         <td>id</td>
         <td>name</td>

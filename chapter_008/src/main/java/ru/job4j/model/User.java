@@ -9,20 +9,25 @@ public final class User {
     private String login;
     private String email;
     private Timestamp createDate;
+    private String password;
+    private Role role;
 
-    public User(String name, String login, String email, Timestamp createDate) {
+    public User(String name, String login, String email, Timestamp createDate, Role role) {
         this.name = name;
         this.login = login;
         this.email = email;
         this.createDate = createDate;
+        this.role = role;
     }
 
-    public User(int id, String name, String login, String email, Timestamp createDate) {
+    public User(int id, String name, String login, String email, Timestamp createDate, String password, Role role) {
         this.id = id;
         this.name = name;
         this.login = login;
         this.email = email;
         this.createDate = createDate;
+        this.password = password;
+        this.role = role;
     }
 
     public User() {
@@ -57,7 +62,13 @@ public final class User {
         if (email != null ? !email.equals(user.email) : user.email != null) {
             return false;
         }
-        return createDate != null ? createDate.equals(user.createDate) : user.createDate == null;
+        if (createDate != null ? !createDate.equals(user.createDate) : user.createDate != null) {
+            return false;
+        }
+        if (password != null ? !password.equals(user.password) : user.password != null) {
+            return false;
+        }
+        return role != null ? role.equals(user.role) : user.role == null;
     }
 
     @Override
@@ -67,6 +78,8 @@ public final class User {
         result = 31 * result + (login != null ? login.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + (role != null ? role.hashCode() : 0);
         return result;
     }
 
@@ -104,6 +117,22 @@ public final class User {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public void setCreateDate(Timestamp createDate) {
