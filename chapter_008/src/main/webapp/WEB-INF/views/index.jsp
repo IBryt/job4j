@@ -7,7 +7,7 @@
 <body>
 <table style="border: 1px solid black;" cellpadding="1" cellspacing="1" border="1">
     <br>
-    <a href="${pageContext.servletContext.contextPath}/create">Create</a>
+    <a href="${pageContext.servletContext.contextPath}/edit">edit</a>
     <br>
     <a href="${pageContext.servletContext.contextPath}/signin">signin</a>
     <br>

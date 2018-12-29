@@ -17,20 +17,7 @@
         <servlet-name>UserController</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
-    <servlet>
-        <servlet-name>UserCreateController</servlet-name>
-        <servlet-class>ru.job4j.servlets.UserCreateController</servlet-class>
-        <init-param>
-            <param-name>debug</param-name>
-            <param-value>true</param-value>
-        </init-param>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>UserCreateController</servlet-name>
-        <url-pattern>/create</url-pattern>
-    </servlet-mapping>
-    <servlet>
+     <servlet>
         <servlet-name>UserUpdateController</servlet-name>
         <servlet-class>ru.job4j.servlets.UserUpdateController</servlet-class>
         <init-param>

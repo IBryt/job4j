@@ -29,6 +29,7 @@ public class SigninController extends HttpServlet {
             synchronized (session) {
                 session.setAttribute("login", login);
                 session.setAttribute("editAll", user.getRole().isEditAll());
+                session.setAttribute("id", user.getId());
             }
             resp.sendRedirect(String.format("%s/", req.getContextPath()));
         } else {
