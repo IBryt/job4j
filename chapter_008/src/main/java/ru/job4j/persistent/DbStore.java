@@ -7,10 +7,7 @@ import ru.job4j.model.Role;
 import ru.job4j.model.User;
 
 import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.*;
 
 public class DbStore implements Store<User> {
@@ -231,5 +228,30 @@ public class DbStore implements Store<User> {
             LOG.error(e.getMessage(), e);
         }
         return role;
+    }
+
+    @Override
+    public User findByLogin(String login) {
+        User user = null;
+        try (Connection connection = SOURCE.getConnection()) {
+            try (PreparedStatement st = connection.prepareStatement("SELECT * FROM Users WHERE login = ?")) {
+                st.setString(1, login);
+                ResultSet rs = st.executeQuery();
+                if (rs.next()) {
+                    user = new User(
+                            rs.getInt("id"),
+                            rs.getString("name"),
+                            rs.getString("login"),
+                            rs.getString("email"),
+                            rs.getTimestamp("date"),
+                            rs.getString("password"),
+                            getRoleById(rs.getInt("role_id"))
+                    );
+                }
+            }
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+        }
+        return user;
     }
 }

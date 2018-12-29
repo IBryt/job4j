@@ -65,4 +65,8 @@ public class ValidateService {
     public Role getRoleById(int id) {
         return store.getRoleById(id);
     }
+
+    public User findByLogin(final String login) {
+        return store.findByLogin(login);
+    }
 }

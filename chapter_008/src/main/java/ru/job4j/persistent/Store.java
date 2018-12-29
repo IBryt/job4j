@@ -25,4 +25,6 @@ public interface Store<T>  {
     List<Role> getRoles();
 
     Role getRoleById(int id);
+
+    User findByLogin(String login);
 }

@@ -41,12 +41,6 @@ public class UserController extends HttpServlet {
     }
 
     private void operations(HttpServletRequest req) {
-        if ("update".equals(req.getParameter("action"))) {
-            int id = Integer.parseInt(req.getParameter("id"));
-            User user = logic.findById(id);
-            user.setName(req.getParameter("name"));
-            logic.update(user);
-        }
         if ("delete".equals(req.getParameter("action"))) {
             int id = Integer.parseInt(req.getParameter("id"));
             logic.delete(id);
