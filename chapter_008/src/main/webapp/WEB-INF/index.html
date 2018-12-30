@@ -9,8 +9,12 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script>
         function validate() {
-            alert($('#usr').val());
-            return false;
+            var res = true;
+            if($('#usr').val() == '') {
+                res = false;
+                alert($('#usr').attr('title'));
+            }
+            return res;
         }
     </script>
 </head>
@@ -34,7 +38,7 @@
         </div>
         <div class="form-group">
             <label>Sex:</label>
-            <input type="radio" class="form-inline" name="sex"> Male
+            <input type="radio" class="form-inline" name="sex" checked> Male
             <input type="radio" class="form-inline" name="sex"> Female
         </div>
         <div class="form-group">
