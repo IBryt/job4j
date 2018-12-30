@@ -16,6 +16,19 @@
             }
             return res;
         }
+        function addRow() {
+            $(
+                $.ajax('./json', {
+                    method : 'get',
+                    complete : function () {
+                        if (validate()) {
+                            var name = $('#usr').val();
+                            $('#table .table tr:last').after('<tr><td>' + name + '</td></tr>');
+                        }
+                    }
+                })
+            );
+        }
     </script>
 </head>
 <body>
@@ -46,22 +59,17 @@
             <textarea class="form-control" id="desc"></textarea>
         </div>
         <button type="button" class="btn btn-default" onclick="return validate();">Submit</button>
+        <button type="button" class="btn btn-default" onclick="return addRow();">json</button>
     </form>
 
 </div>
 <br>
 <div class="container">
-    <table class="table">
+    <table class="table" id ="table">
         <tr>
             <th>Firstname</th>
             <th>Lastname</th>
             <th>Email</th>
-        </tr>
-        <tbody>
-        <tr>
-            <td>John</td>
-            <td>Doe</td>
-            <td>john@example.com</td>
         </tr>
     </table>
 </div>
