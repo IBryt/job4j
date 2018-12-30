@@ -26,11 +26,9 @@ public class SigninController extends HttpServlet {
         User user = logic.isCredentional(login, password);
         if (user != null) {
             HttpSession session = req.getSession();
-            synchronized (session) {
-                session.setAttribute("login", login);
-                session.setAttribute("editAll", user.getRole().isEditAll());
-                session.setAttribute("id", user.getId());
-            }
+            session.setAttribute("login", login);
+            session.setAttribute("editAll", user.getRole().isEditAll());
+            session.setAttribute("id", user.getId());
             resp.sendRedirect(String.format("%s/", req.getContextPath()));
         } else {
             req.setAttribute("error", "Credentional invalid");

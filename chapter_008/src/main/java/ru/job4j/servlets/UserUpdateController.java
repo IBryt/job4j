@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class UserUpdateController extends HttpServlet {
     private static final Logger LOG = LogManager.getLogger(UserUpdateController.class.getName());
@@ -21,27 +23,32 @@ public class UserUpdateController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String id = req.getParameter("id");
+        boolean editAll = (boolean) req.getSession().getAttribute("editAll");
+        req.setAttribute("roles", getRoles(editAll));
         if (id != null) {
             User user = logic.findById(Integer.parseInt(id));
             if (user != null) {
                 req.setAttribute("user", user);
                 if (req.getSession().getAttribute("login") != null) {
-                    if ((boolean) req.getSession().getAttribute("editAll")
+                    if (editAll
                             || user.getLogin().equals(req.getSession().getAttribute("login"))) {
-                        req.setAttribute("roles", logic.getRoles());
                         req.getRequestDispatcher("/WEB-INF/views/UserUpdateServlet.jsp").forward(req, resp);
                     } else {
-                        //                    req.setAttribute("error", "Not editing right");
-                        //                    req.getRequestDispatcher("/WEB-INF/views/index.jsp").forward(req, resp);
                         resp.sendRedirect(String.format("%s/", req.getContextPath()));
                     }
                 }
             }
         } else {
-            req.setAttribute("roles", logic.getRoles());
             req.setAttribute("user", new User("", "", "", new Timestamp(new Date().getTime()), new Role()));
             req.getRequestDispatcher("/WEB-INF/views/UserUpdateServlet.jsp").forward(req, resp);
         }
+    }
+
+    private List<Role> getRoles(boolean editAll) {
+        return logic.getRoles().
+                stream().
+                filter(e-> editAll || !e.isEditAll()).
+                collect(Collectors.toList());
     }
 
     @Override
