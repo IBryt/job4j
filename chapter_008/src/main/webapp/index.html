@@ -17,17 +17,10 @@
             return res;
         }
         function addRow() {
-            $(
-                $.ajax('./json', {
-                    method : 'get',
-                    complete : function () {
-                        if (validate()) {
-                            var name = $('#usr').val();
-                            $('#table .table tr:last').after('<tr><td>' + name + '</td></tr>');
-                        }
-                    }
-                })
-            );
+            if (validate()) {
+                var name = $('#usr').val();
+                $('#users tr:last').after('<tr><td>' + name + '</td></tr>');
+            };
         }
     </script>
 </head>
@@ -65,7 +58,7 @@
 </div>
 <br>
 <div class="container">
-    <table class="table" id ="table">
+    <table class="table" id ="users">
         <tr>
             <th>Firstname</th>
             <th>Lastname</th>
