@@ -8,6 +8,31 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script>
+        function loadUsers() {
+            $.ajax('./json', {
+                method: 'get',
+                complete: function (data) {
+                    var json = JSON.parse(data.responseText);
+                    var res =
+                        "<tr>" +
+                        "<th>Firstname</th>" +
+                        "<th>Lastname</th>" +
+                        "<th>Email</th>" +
+                        "</tr>";
+                    document.getElementById("users").innerHTML = res;
+                    for (var i in json) {
+                        $('#users tr:last').after(
+                            '<tr>' +
+                            '<td>' + json[i].name + '</td>' +
+                            '<td>' + json[i].lastname + '</td>' +
+                            '<td>' + json[i].email + '</td>' +
+                            '</tr>'
+                        );
+                    }
+                }
+            })
+        }
+
         function validate() {
             var res = true;
             if($('#usr').val() == '') {
@@ -16,11 +41,25 @@
             }
             return res;
         }
-        function addRow() {
-            if (validate()) {
-                var name = $('#usr').val();
-                $('#users tr:last').after('<tr><td>' + name + '</td></tr>');
+
+        function createUser() {
+            if (!validate()) {
+                return false;
             };
+            $(
+
+                $.ajax('./json', {
+                        method : 'post',
+                        data : {
+                            name : $('#usr').val(),
+                            lastname : $('#lastname').val(),
+                            email : $('#email').val()
+                        },
+                        complete: loadUsers()
+                    }
+                )
+            );
+            return false
         }
     </script>
 </head>
@@ -43,6 +82,10 @@
             <input type="text" class="form-control" id="lastname">
         </div>
         <div class="form-group">
+            <label for="email">Email :</label>
+            <input type="text" class="form-control" id="email">
+        </div>
+        <div class="form-group">
             <label>Sex:</label>
             <input type="radio" class="form-inline" name="sex" checked> Male
             <input type="radio" class="form-inline" name="sex"> Female
@@ -52,7 +95,7 @@
             <textarea class="form-control" id="desc"></textarea>
         </div>
         <button type="button" class="btn btn-default" onclick="return validate();">Submit</button>
-        <button type="button" class="btn btn-default" onclick="return addRow();">json</button>
+        <button type="button" class="btn btn-default" onclick="return createUser();">json</button>
     </form>
 
 </div>

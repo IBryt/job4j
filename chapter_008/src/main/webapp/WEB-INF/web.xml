@@ -40,6 +40,15 @@
         <servlet-name>Signin</servlet-name>
         <url-pattern>/signin</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>AjaxController</servlet-name>
+        <servlet-class>ru.job4j.servlets.AjaxController</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AjaxController</servlet-name>
+        <url-pattern>/json</url-pattern>
+    </servlet-mapping>
     <filter>
         <filter-name>AuthFilter</filter-name>
         <filter-class>ru.job4j.servlets.AuthFilter</filter-class>
