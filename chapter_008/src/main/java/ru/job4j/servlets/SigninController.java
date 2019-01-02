@@ -2,6 +2,7 @@ package ru.job4j.servlets;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.job4j.logic.Validate;
 import ru.job4j.logic.ValidateService;
 import ru.job4j.model.User;
 
@@ -14,7 +15,7 @@ import java.io.IOException;
 
 public class SigninController extends HttpServlet {
     private static final Logger LOG = LogManager.getLogger(SigninController.class.getName());
-    private final ValidateService logic = ValidateService.getInstance();
+    private final Validate logic = ValidateService.getInstance();
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.getRequestDispatcher("/WEB-INF/views/Login.jsp").forward(req, resp);

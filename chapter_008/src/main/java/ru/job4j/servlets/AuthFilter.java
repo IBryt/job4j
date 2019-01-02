@@ -1,5 +1,6 @@
 package ru.job4j.servlets;
 
+import ru.job4j.logic.Validate;
 import ru.job4j.logic.ValidateService;
 
 import javax.servlet.*;
@@ -9,7 +10,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class AuthFilter implements Filter {
-    private final ValidateService logic = ValidateService.getInstance();
+    private final Validate logic = ValidateService.getInstance();
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
 

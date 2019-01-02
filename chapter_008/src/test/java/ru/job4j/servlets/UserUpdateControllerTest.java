@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import ru.job4j.logic.Validate;
 import ru.job4j.logic.ValidateService;
 import ru.job4j.model.Role;
 import ru.job4j.model.User;
@@ -22,7 +23,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 public class UserUpdateControllerTest {
-    private ValidateService service = ValidateService.getInstance();
+    private Validate service = ValidateService.getInstance();
     //private Store store = DbStore.getInstance();
     private UserUpdateController controller = new UserUpdateController();
     private User user;

@@ -9,14 +9,15 @@ import java.util.Map;
 import ru.job4j.persistent.DbStore;
 import ru.job4j.persistent.Store;
 
-public class ValidateService {
-    private static final ValidateService INSTANCE = new ValidateService();
+public class ValidateService implements Validate {
+    private static final Validate INSTANCE = new ValidateService();
     private final Store<User> store = DbStore.getInstance();
     private ValidateService() { }
-    public static ValidateService getInstance() {
+    public static Validate getInstance() {
         return INSTANCE;
     }
 
+    @Override
     public boolean add(final User user) {
         boolean res = false;
         if (checkUserNameLogin(user)) {
@@ -25,6 +26,7 @@ public class ValidateService {
         return res;
     }
 
+    @Override
     public boolean update(final User user) {
         boolean res = false;
         if (checkUserNameLogin(user)) {
@@ -42,30 +44,38 @@ public class ValidateService {
                 && !store.checkUnique(user);
     }
 
+    @Override
     public boolean delete(final int id) {
         User user = store.findById(id);
         return user == null ? false : store.delete(user);
     }
 
+    @Override
     public Map<Integer, User> findAll() {
         return store.findAll();
     }
 
+    @Override
     public User findById(final int id) {
         return store.findById(id);
     }
 
+    @Override
     public User isCredentional(String login, String password) {
         return store.isCredentional(login, password);
     }
 
+    @Override
     public List<Role> getRoles() {
         return store.getRoles();
     }
+
+    @Override
     public Role getRoleById(int id) {
         return store.getRoleById(id);
     }
 
+    @Override
     public User findByLogin(final String login) {
         return store.findByLogin(login);
     }

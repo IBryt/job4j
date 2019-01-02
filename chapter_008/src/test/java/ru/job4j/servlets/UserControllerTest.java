@@ -1,9 +1,12 @@
 package ru.job4j.servlets;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import ru.job4j.logic.Validate;
 import ru.job4j.logic.ValidateService;
 import ru.job4j.model.Role;
 import ru.job4j.model.User;
@@ -15,17 +18,22 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Date;
-import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(ValidateService.class)
 public class UserControllerTest {
-    private ValidateService service = ValidateService.getInstance();
+    private Validate service;
     private UserController controller = new UserController();
     @Before
     public void before() {
+        service = new ValidateStub();
+        mockStatic(ValidateService.class);
+        when(ValidateService.getInstance()).thenReturn(service);
         service.add(
                 new User("test1",
                         "test1",

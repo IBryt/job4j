@@ -2,6 +2,7 @@ package ru.job4j.servlets;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import ru.job4j.logic.Validate;
 import ru.job4j.logic.ValidateService;
 import ru.job4j.model.User;
 
@@ -19,7 +20,7 @@ import java.util.HashMap;
 
 public class UserController extends HttpServlet {
     private static final Logger LOG = LogManager.getLogger(UserController.class.getName());
-    private final ValidateService logic = ValidateService.getInstance();
+    private final Validate logic = ValidateService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
