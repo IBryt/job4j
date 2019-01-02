@@ -1,5 +1,7 @@
 package ru.job4j.servlets;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import ru.job4j.logic.ValidateService;
@@ -22,11 +24,8 @@ import static org.mockito.Mockito.when;
 public class UserControllerTest {
     private ValidateService service = ValidateService.getInstance();
     private UserController controller = new UserController();
-
-    @Test
-    public void addUser() throws ServletException, IOException {
-        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-        HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
+    @Before
+    public void before() {
         service.add(
                 new User("test1",
                         "test1",
@@ -35,6 +34,12 @@ public class UserControllerTest {
                         new Role(1, "", true)
                 )
         );
+    }
+
+    @Test
+    public void deleteUser() throws ServletException, IOException {
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
         assertThat(service.findAll().
                         entrySet().
                         stream().
