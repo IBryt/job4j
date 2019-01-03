@@ -10,7 +10,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class AuthFilter implements Filter {
-    private final Validate logic = ValidateService.getInstance();
+    private static final Validate LOGIC = ValidateService.getInstance();
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
 

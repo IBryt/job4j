@@ -15,7 +15,7 @@ import java.io.IOException;
 
 public class SigninController extends HttpServlet {
     private static final Logger LOG = LogManager.getLogger(SigninController.class.getName());
-    private final Validate logic = ValidateService.getInstance();
+    private static final Validate LOGIC = ValidateService.getInstance();
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.getRequestDispatcher("/WEB-INF/views/Login.jsp").forward(req, resp);
@@ -24,7 +24,7 @@ public class SigninController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String login = req.getParameter("login");
         String password = req.getParameter("password");
-        User user = logic.isCredentional(login, password);
+        User user = LOGIC.isCredentional(login, password);
         if (user != null) {
             HttpSession session = req.getSession();
             session.setAttribute("login", login);

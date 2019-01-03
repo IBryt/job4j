@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 public class UserUpdateController extends HttpServlet {
     private static final Logger LOG = LogManager.getLogger(UserUpdateController.class.getName());
-    private final Validate logic = ValidateService.getInstance();
+    private static final Validate LOGIC = ValidateService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -27,7 +27,7 @@ public class UserUpdateController extends HttpServlet {
         boolean editAll = (boolean) req.getSession().getAttribute("editAll");
         req.setAttribute("roles", getRoles(editAll));
         if (id != null) {
-            User user = logic.findById(Integer.parseInt(id));
+            User user = LOGIC.findById(Integer.parseInt(id));
             if (user != null) {
                 req.setAttribute("user", user);
                 if (req.getSession().getAttribute("login") != null) {
@@ -46,7 +46,7 @@ public class UserUpdateController extends HttpServlet {
     }
 
     private List<Role> getRoles(boolean editAll) {
-        return logic.getRoles().
+        return LOGIC.getRoles().
                 stream().
                 filter(e-> editAll || !e.isEditAll()).
                 collect(Collectors.toList());
@@ -56,20 +56,20 @@ public class UserUpdateController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String id = req.getParameter("id");
         if (!id.equals("0")) {
-            User user = logic.findById(Integer.parseInt(id));
+            User user = LOGIC.findById(Integer.parseInt(id));
             user.setName(req.getParameter("name"));
             user.setLogin(req.getParameter("login"));
             user.setEmail(req.getParameter("email"));
-            Role role = logic.getRoleById(Integer.parseInt(req.getParameter("role")));
+            Role role = LOGIC.getRoleById(Integer.parseInt(req.getParameter("role")));
             user.setRole(role);
-            logic.update(user);
+            LOGIC.update(user);
         } else {
-            logic.add(new User(
+            LOGIC.add(new User(
                             req.getParameter("name"),
                             req.getParameter("login"),
                             req.getParameter("email"),
                             new Timestamp(new Date().getTime()),
-                            logic.getRoleById(Integer.parseInt(req.getParameter("role")))
+                            LOGIC.getRoleById(Integer.parseInt(req.getParameter("role")))
                     )
             );
         }

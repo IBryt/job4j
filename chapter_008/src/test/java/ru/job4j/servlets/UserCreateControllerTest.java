@@ -3,7 +3,12 @@ package ru.job4j.servlets;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.reflect.Whitebox;
 import ru.job4j.logic.Validate;
 import ru.job4j.logic.ValidateService;
 import ru.job4j.model.Role;
@@ -20,12 +25,17 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
+@PowerMockIgnore("javax.management.*")
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(UserCreateController.class)
 public class UserCreateControllerTest {
-    private Validate service = ValidateService.getInstance();
+    private Validate service;
     private UserCreateController controller = new UserCreateController();
 
     @Before
     public void before() {
+        service = new ValidateStub();
+        Whitebox.setInternalState(UserCreateController.class, "LOGIC", service);
         service.add(
                 new User("test1",
                         "test1",

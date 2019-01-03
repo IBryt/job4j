@@ -4,10 +4,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.reflect.Whitebox;
 import ru.job4j.logic.Validate;
-import ru.job4j.logic.ValidateService;
 import ru.job4j.model.Role;
 import ru.job4j.model.User;
 
@@ -21,19 +22,19 @@ import java.util.Date;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.mockito.Mockito.mock;
 
+@PowerMockIgnore("javax.management.*")
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(ValidateService.class)
+@PrepareForTest(UserController.class)
 public class UserControllerTest {
     private Validate service;
     private UserController controller = new UserController();
+
     @Before
     public void before() {
         service = new ValidateStub();
-        mockStatic(ValidateService.class);
-        when(ValidateService.getInstance()).thenReturn(service);
+        Whitebox.setInternalState(UserController.class, "LOGIC", service);
         service.add(
                 new User("test1",
                         "test1",
@@ -46,8 +47,8 @@ public class UserControllerTest {
 
     @Test
     public void deleteUser() throws ServletException, IOException {
-        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-        HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
         assertThat(service.findAll().
                         entrySet().
                         stream().
@@ -55,8 +56,8 @@ public class UserControllerTest {
                 is(true)
         );
         User user = service.findByLogin("test1");
-        when(request.getParameter("action")).thenReturn("delete");
-        when(request.getParameter("id")).thenReturn(String.valueOf(user.getId()));
+        Mockito.when(request.getParameter("action")).thenReturn("delete");
+        Mockito.when(request.getParameter("id")).thenReturn(String.valueOf(user.getId()));
         controller.doPost(request, response);
         assertThat(service.findAll().
                 entrySet().stream().

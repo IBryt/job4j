@@ -18,11 +18,11 @@ import java.util.Date;
 
 public class UserCreateController extends HttpServlet {
     private static final Logger LOG = LogManager.getLogger(UserCreateController.class.getName());
-    private final Validate logic = ValidateService.getInstance();
+    private static final Validate LOGIC = ValidateService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("roles", logic.getRoles());
+        req.setAttribute("roles", LOGIC.getRoles());
         req.getRequestDispatcher("/WEB-INF/views/UserUpdateServlet.jsp").forward(req, resp);
     }
 
@@ -38,9 +38,9 @@ public class UserCreateController extends HttpServlet {
             String name = req.getParameter("name");
             String login = req.getParameter("login");
             String email = req.getParameter("email");
-            Role role = logic.getRoleById(Integer.parseInt(req.getParameter("role")));
+            Role role = LOGIC.getRoleById(Integer.parseInt(req.getParameter("role")));
             User user = new User(name, login, email, new Timestamp(new Date().getTime()), role);
-            logic.add(user);
+            LOGIC.add(user);
         }
     }
 }

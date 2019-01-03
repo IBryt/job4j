@@ -10,24 +10,20 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.HashMap;
 
 
 public class UserController extends HttpServlet {
     private static final Logger LOG = LogManager.getLogger(UserController.class.getName());
-    private final Validate logic = ValidateService.getInstance();
+    private static final Validate LOGIC = ValidateService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if ((boolean) req.getSession().getAttribute("editAll")) {
-            req.setAttribute("users", logic.findAll());
+            req.setAttribute("users", LOGIC.findAll());
         } else {
-            User user = logic.findById((int) req.getSession().getAttribute("id"));
+            User user = LOGIC.findById((int) req.getSession().getAttribute("id"));
             HashMap<Integer, User> users = new HashMap<>();
             users.put(user.getId(), user);
             req.setAttribute("users", users);
@@ -44,7 +40,7 @@ public class UserController extends HttpServlet {
     private void operations(HttpServletRequest req) {
         if ("delete".equals(req.getParameter("action"))) {
             int id = Integer.parseInt(req.getParameter("id"));
-            logic.delete(id);
+            LOGIC.delete(id);
         }
     }
 }
