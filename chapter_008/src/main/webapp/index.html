@@ -8,29 +8,77 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script>
-        function loadUsers() {
+
+        function loadCounries() {
             $.ajax('./json', {
-                method: 'get',
-                complete: function (data) {
-                    var json = JSON.parse(data.responseText);
-                    var res =
-                        "<tr>" +
-                        "<th>Firstname</th>" +
-                        "<th>Lastname</th>" +
-                        "<th>Email</th>" +
-                        "</tr>";
-                    document.getElementById("users").innerHTML = res;
-                    for (var i in json) {
-                        $('#users tr:last').after(
-                            '<tr>' +
-                            '<td>' + json[i].name + '</td>' +
-                            '<td>' + json[i].lastname + '</td>' +
-                            '<td>' + json[i].email + '</td>' +
-                            '</tr>'
-                        );
+                    method : 'get',
+                    data : { type : 'countries'},
+                    complete: function (data) {
+                        var json = JSON.parse(data.responseText);
+                        var res = '<option style="display:none"></option>';
+                        for(var i in json) {
+                            res = res + '<option>'+json[i].name +'</option>';
+                        }
+                        document.getElementById("country").innerHTML = res;
                     }
                 }
+            )
+        }
+
+        $(document).ready(function () {
+            loadCounries();
+            $('#country').change(function () {
+                $.ajax('./json', {
+                        method : 'get',
+                        data : {
+                            type : 'towns',
+                            country: $('#country').val()
+                        },
+                        complete: function (data) {
+                            var json = JSON.parse(data.responseText);
+                            var res = '<option style="display:none"></option>';
+                            for(var i in json) {
+                                res = res + '<option>'+json[i].name +'</option>';
+                            }
+                            document.getElementById("town").innerHTML = res;
+                        }
+                    }
+                )
             })
+        });
+
+        function loadUsers() {
+            $(
+                $.ajax('./json', {
+                    method: 'get',
+                    data : { type : 'users'},
+                    complete: function (data) {
+                        var json = JSON.parse(data.responseText);
+                        var res =
+                            "<tr>" +
+                            "<th>Firstname</th>" +
+                            "<th>Lastname</th>" +
+                            "<th>Email</th>" +
+                            "<th>Country</th>" +
+                            "<th>Town</th>" +
+                            "</tr>";
+                        document.getElementById("users").innerHTML = res;
+                        for (var i in json) {
+                            console.log(json[i].country, json[i]);
+                            $('#users tr:last').after(
+                                '<tr>' +
+                                '<td>' + json[i].name + '</td>' +
+                                '<td>' + json[i].lastname + '</td>' +
+                                '<td>' + json[i].email + '</td>' +
+                                '<td>' + json[i].country.name + '</td>' +
+                                '<td>' + json[i].town.name + '</td>' +
+                                '</tr>'
+                            );
+                        }
+
+                    }
+                })
+            );
         }
 
         function validate() {
@@ -38,6 +86,22 @@
             if($('#usr').val() == '') {
                 res = false;
                 alert($('#usr').attr('title'));
+            }
+            if($('#lastname').val() == '') {
+                res = false;
+                alert($('#lastname').attr('title'));
+            }
+            if($('#email').val() == '') {
+                res = false;
+                alert($('#email').attr('title'));
+            }
+            if($('#town').val() == '') {
+                res = false;
+                alert($('#town').attr('title'));
+            }
+            if($('#country').val() == '') {
+                res = false;
+                alert($('#country').attr('title'));
             }
             return res;
         }
@@ -47,67 +111,79 @@
                 return false;
             };
             $(
-
                 $.ajax('./json', {
                         method : 'post',
                         data : {
                             name : $('#usr').val(),
                             lastname : $('#lastname').val(),
-                            email : $('#email').val()
+                            email : $('#email').val(),
+                            country : $('#country').val(),
+                            town : $('#town').val()
                         },
                         complete: loadUsers()
                     }
                 )
             );
-            return false
+            return true
         }
     </script>
 </head>
 <body>
-
 <div class="container">
-    <h2>Form control: input</h2>
-    <p>The form below contains two input elements; one of type text and one of type password:</p>
-    <form>
-        <div class="form-group">
-            <label for="usr">Name:</label>
-            <input type="text" class="form-control" title="Enter user name." id="usr">
-        </div>
-        <div class="form-group">
-            <label for="pwd">Password:</label>
-            <input type="password" class="form-control" id="pwd">
-        </div>
-        <div class="form-group">
-            <label for="lastname">Last name:</label>
-            <input type="text" class="form-control" id="lastname">
-        </div>
-        <div class="form-group">
-            <label for="email">Email :</label>
-            <input type="text" class="form-control" id="email">
-        </div>
-        <div class="form-group">
-            <label>Sex:</label>
-            <input type="radio" class="form-inline" name="sex" checked> Male
-            <input type="radio" class="form-inline" name="sex"> Female
-        </div>
-        <div class="form-group">
-            <label for="desc">Description:</label>
-            <textarea class="form-control" id="desc"></textarea>
-        </div>
-        <button type="button" class="btn btn-default" onclick="return validate();">Submit</button>
-        <button type="button" class="btn btn-default" onclick="return createUser();">json</button>
-    </form>
-
-</div>
-<br>
-<div class="container">
-    <table class="table" id ="users">
-        <tr>
-            <th>Firstname</th>
-            <th>Lastname</th>
-            <th>Email</th>
-        </tr>
-    </table>
+    <div class="jumbotron">
+        <h2>Form control: input</h2>
+        <p>The form below contains two input elements; one of type text and one of type password:</p>
+        <hr class="my-4">
+        <form>
+            <div class="form-group">
+                <label for="usr">Name:</label>
+                <input type="text" class="form-control" title="Enter user name." id="usr">
+            </div>
+            <div class="form-group">
+                <label for="pwd">Password:</label>
+                <input type="password" class="form-control" id="pwd">
+            </div>
+            <div class="form-group">
+                <label for="lastname">Last name:</label>
+                <input type="text" class="form-control" title="Enter user lastname." id="lastname">
+            </div>
+            <div class="form-group">
+                <label for="email">Email :</label>
+                <input type="text" class="form-control" title="Enter email." id="email">
+            </div>
+            <div class="form-group">
+                <label for="country">Country :</label>
+                <select name="country" class="form-control" title="Enter country." id="country">
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="country">Town :</label>
+                <select name="town" class="form-control" title="Enter town." id="town">
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Sex:</label>
+                <input type="radio" class="form-inline" name="sex" checked> Male
+                <input type="radio" class="form-inline" name="sex"> Female
+            </div>
+            <p><input class="btn btn-primary btn-lg" type="submit" value="Отправить"></p>
+            <div class="form-group">
+                <label for="desc">Description:</label>
+                <textarea class="form-control" id="desc"></textarea>
+            </div>
+            <button type="button" class="btn btn-primary btn-lg" onclick="return createUser();">json</button>
+        </form>
+        <hr class="my-4">
+        <table class="table table-bordered" id ="users">
+            <tr>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Email</th>
+                <th>Country</th>
+                <th>Town</th>
+            </tr>
+        </table>
+    </div>
 </div>
 </body>
 </html>

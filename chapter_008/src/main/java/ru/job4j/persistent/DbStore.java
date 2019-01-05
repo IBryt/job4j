@@ -3,7 +3,9 @@ package ru.job4j.persistent;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.job4j.model.Countries;
 import ru.job4j.model.Role;
+import ru.job4j.model.Towns;
 import ru.job4j.model.User;
 
 import java.io.InputStream;
@@ -253,5 +255,93 @@ public class DbStore implements Store<User> {
             LOG.error(e.getMessage(), e);
         }
         return user;
+    }
+
+    @Override
+    public Map<Integer, Countries> getCountries() {
+        Map<Integer, Countries> countries = new HashMap<>();
+        try (Connection connection = SOURCE.getConnection()) {
+            try (Statement st = connection.createStatement()) {
+                ResultSet rs = st.executeQuery("SELECT * FROM Countries");
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    countries.put(id,
+                            new Countries(
+                                    id,
+                                    rs.getString("name")
+                            )
+                    );
+                }
+            }
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+        }
+        return countries;
+    }
+
+    @Override
+    public Map<Integer, Towns> getTowns(String country) {
+        Map<Integer, Towns> towns = new HashMap<>();
+        try (Connection connection = SOURCE.getConnection()) {
+            try (PreparedStatement st = connection.prepareStatement("SELECT \n"
+                    + "\ttowns.id,\n"
+                    + "\ttowns.name\n"
+                    + "FROM towns AS towns\n"
+                    + "\tLEFT JOIN countries AS countries ON towns.countries_id = countries.id\n"
+                    + "WHERE \n"
+                    + "\tcountries.name = ?")) {
+                st.setString(1, country);
+                ResultSet rs = st.executeQuery();
+                if (rs.next()) {
+                    int id = rs.getInt("id");
+                    towns.put(id, new Towns(id, rs.getString("name")));
+                }
+            }
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+        }
+        return towns;
+    }
+
+    @Override
+    public Countries getCountry(String country) {
+        Countries res = null;
+        try (Connection connection = SOURCE.getConnection()) {
+            try (PreparedStatement st = connection.prepareStatement("SELECT * FROM countries WHERE name = ?")) {
+                st.setString(1, country);
+                ResultSet rs = st.executeQuery();
+                if (rs.next()) {
+                    res = new Countries(
+                            rs.getInt("id"),
+                            rs.getString("name")
+                    );
+                }
+            }
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+        }
+        return res;
+    }
+
+    @Override
+    public Towns getTown(String town, Countries country) {
+        Towns res = null;
+        try (Connection connection = SOURCE.getConnection()) {
+            try (PreparedStatement st = connection.prepareStatement("SELECT * FROM towns WHERE name = ? AND countries_id = ?")) {
+                st.setString(1, town);
+                st.setInt(2, country.getId());
+                ResultSet rs = st.executeQuery();
+                if (rs.next()) {
+                    res = new Towns(
+                            rs.getInt("id"),
+                            rs.getString("name"),
+                            country
+                    );
+                }
+            }
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+        }
+        return res;
     }
 }

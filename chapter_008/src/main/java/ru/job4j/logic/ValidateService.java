@@ -1,6 +1,8 @@
 package ru.job4j.logic;
 
+import ru.job4j.model.Countries;
 import ru.job4j.model.Role;
+import ru.job4j.model.Towns;
 import ru.job4j.model.User;
 
 import java.util.List;
@@ -78,5 +80,25 @@ public class ValidateService implements Validate {
     @Override
     public User findByLogin(final String login) {
         return store.findByLogin(login);
+    }
+
+    @Override
+    public Map<Integer, Countries> getCountries() {
+        return store.getCountries();
+    }
+
+    @Override
+    public Map<Integer, Towns> getTowns(String country) {
+        return store.getTowns(country);
+    }
+
+    @Override
+    public Countries getCountry(String country) {
+        return store.getCountry(country);
+    }
+
+    @Override
+    public Towns getTown(String town, Countries country) {
+        return store.getTown(town, country);
     }
 }

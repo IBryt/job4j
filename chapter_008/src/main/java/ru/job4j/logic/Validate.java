@@ -1,6 +1,8 @@
 package ru.job4j.logic;
 
+import ru.job4j.model.Countries;
 import ru.job4j.model.Role;
+import ru.job4j.model.Towns;
 import ru.job4j.model.User;
 
 import java.util.List;
@@ -25,4 +27,12 @@ public interface Validate {
     Role getRoleById(int id);
 
     User findByLogin(final String login);
+
+    Map<Integer, Countries> getCountries();
+
+    Map<Integer, Towns> getTowns(String country);
+
+    Countries getCountry(String country);
+
+    Towns getTown(String town, Countries country);
 }

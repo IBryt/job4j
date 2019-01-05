@@ -1,7 +1,10 @@
 package ru.job4j.servlets;
 
 import ru.job4j.logic.Validate;
+import ru.job4j.logic.ValidateService;
+import ru.job4j.model.Countries;
 import ru.job4j.model.Role;
+import ru.job4j.model.Towns;
 import ru.job4j.model.User;
 
 import java.util.ArrayList;
@@ -73,5 +76,25 @@ public class ValidateStub implements Validate {
                 stream().
                 filter(e -> e.getValue().getLogin().equals(login))
                 .findFirst().map(Map.Entry::getValue).orElse(null);
+    }
+
+    @Override
+    public Map<Integer, Countries> getCountries() {
+        return null;
+    }
+
+    @Override
+    public Map<Integer, Towns> getTowns(String country) {
+        return null;
+    }
+
+    @Override
+    public Countries getCountry(String country) {
+        return null;
+    }
+
+    @Override
+    public Towns getTown(String town, Countries country) {
+        return null;
     }
 }
