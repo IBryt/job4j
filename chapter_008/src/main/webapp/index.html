@@ -27,6 +27,7 @@
 
         $(document).ready(function () {
             loadCounries();
+            loadUsers();
             $('#country').change(function () {
                 $.ajax('./json', {
                         method : 'get',
@@ -120,10 +121,11 @@
                             country : $('#country').val(),
                             town : $('#town').val()
                         },
-                        complete: loadUsers()
+                        complete: function() {loadUsers()}
                     }
                 )
             );
+            loadUsers();
             return true
         }
     </script>
