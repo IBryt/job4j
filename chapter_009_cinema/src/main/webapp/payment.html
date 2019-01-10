@@ -13,11 +13,58 @@
 <body>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function () {
+        if (getIdHall()  == null) {
+            res = false;
+            document.getElementById('main').innerHTML = '<h3>Не выбрано место для оформления заказа.</h3>'
+        };
+        $('#payment').click(function() {
+            if (validate()) {
+                payment();
 
-<div class="container">
+                //window.location.href = '/cinema/payment.html'.concat('?id=').concat(getCurrentPlace());
+            };
+        });
+    });
+
+    function payment() {
+        $(
+            $.ajax('./payment', {
+                    method : 'post',
+                    data : {
+                        id : getIdHall(),
+                        name : $('#username').val(),
+                        phone : $('#phone').val()
+                    },
+                    complete: function() {loadUsers()}
+                }
+            )
+        );
+    }
+
+    function loadUsers() {};
+
+    function getIdHall() {
+        return new URL(window.location.href).searchParams.get("id");
+    }
+
+    function validate() {
+        var res = true;
+        if ($('#username').val() == '') {
+            alert('Не указано имя');
+        }
+        if ($('#phone').val() == '') {
+            alert('Не указан номер телефона');
+        }
+        return res;
+    }
+
+</script>
+<div id="main" class="container">
     <div class="row pt-3">
         <h3>
             Вы выбрали ряд 1 место 1, Сумма : 500 рублей.
@@ -33,7 +80,7 @@
                 <label for="phone">Номер телефона</label>
                 <input type="text" class="form-control" id="phone" placeholder="Номер телефона">
             </div>
-            <button type="button" class="btn btn-success">Оплатить</button>
+            <button id="payment" type="button" class="btn btn-success">Оплатить</button>
         </form>
     </div>
 </div>

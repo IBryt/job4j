@@ -19,21 +19,64 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script>
     $(document).ready(function () {
+        payment();
         loadHall();
+        setInterval(function() {
+            loadHall();
+        }, 1000);
     });
+
+    function payment() {
+        $('#payment').click(function() {
+            if (validate()) {
+                window.location.href = '/cinema/payment.html'.concat('?id=').concat(getCurrentPlace());
+            }
+        });
+    }
+
+    function getCurrentPlace() {
+        var id = '-1';
+        var radios = document.getElementsByName('place');
+        for (var i = 0, length = radios.length; i < length; i++) {
+            if (radios[i].checked) {
+                id = radios[i].value;
+                break;
+            }
+        }
+        return id;
+    }
+
+    function validate() {
+        var res = true;
+        if (getCurrentPlace() == '-1') {
+            document.getElementById("error").innerHTML = 'Не выбрано место для оформления заказа!';
+            res = false;
+        }
+        return res;
+    }
 
     function loadHall() {
         $.ajax('./hall', {
                 method : 'get',
+                data : {place : getCurrentPlace()},
                 complete: function (data) {
                     var json = JSON.parse(data.responseText);
                     var res = '';
                     for (var i in json) {
+                        if (i != 'place') {
                         res += '<tr><th>' + i +'</th>';
-                        console.log('test');
                         var row = json[i];
-                        for (var r in row) {
-                            res += '<td><input type="radio" name="place" value=' + row[r].id + '>' + row[r].name + '</td>';
+                            for (var r in row) {
+                                if (row[r].occupied) {
+                                    res += '<td><input disabled type="radio" name="place" value=' + row[r].id + '>' + row[r].name.concat('(Забронировано)') + '</td>';
+                                } else {
+                                    if (json.place == row[r].id ) {
+                                        res += '<td><input type="radio" name="place" value=' + row[r].id + ' checked>' + row[r].name + '</td>';
+                                    } else {
+                                        res += '<td><input type="radio" name="place" value=' + row[r].id + '>' + row[r].name + '</td>';
+                                    }
+                                }
+                            }
                         }
                         res += '</tr>';
                     }
@@ -61,8 +104,10 @@
             </tbody>
         </table>
     </div>
-    <div class="row float-right">
-        <button type="button" class="btn btn-success">Оплатить</button>
+    <div class="row float-top">
+        <div id="error" class="container" style="background: #ff162d">
+        </div>
+        <button id="payment" type="button" class="btn btn-success">Оплатить</button>
     </div>
 </div>
 </body>

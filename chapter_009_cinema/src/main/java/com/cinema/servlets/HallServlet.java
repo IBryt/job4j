@@ -9,7 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -21,12 +23,13 @@ public class HallServlet extends HttpServlet {
         List<Hall> hall = LOGIC.getPlaceHall();
         resp.setContentType("text,/json");
         Set<Integer> set = hall.stream().map(Hall::getRow).collect(Collectors.toSet());
-        HashMap<Integer, List> hashMap = new HashMap<>();
+        HashMap<String, List> hashMap = new HashMap<>();
         for (int i: set) {
-            hashMap.put(i, hall.stream().filter(v-> v.getRow() == i).collect(Collectors.toList()));
+            hashMap.put(String.valueOf(i), hall.stream().filter(v-> v.getRow() == i).collect(Collectors.toList()));
         }
+        hashMap.put("place", Arrays.asList(req.getParameter("place")));
         String json = new ObjectMapper().writeValueAsString(hashMap);
-        PrintWriter writer = resp.getWriter();
+        PrintWriter writer = new PrintWriter(new OutputStreamWriter(resp.getOutputStream(), StandardCharsets.UTF_8));
         writer.append(json);
         writer.flush();
     }

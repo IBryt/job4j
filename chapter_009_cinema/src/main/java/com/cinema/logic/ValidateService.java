@@ -2,6 +2,7 @@ package com.cinema.logic;
 
 
 import com.cinema.model.Hall;
+import com.cinema.model.Tickets;
 import com.cinema.persistent.DbStore;
 import com.cinema.persistent.Store;
 
@@ -18,5 +19,10 @@ public class ValidateService implements Validate {
     @Override
     public List<Hall> getPlaceHall() {
         return store.getPlaceHall();
+    }
+
+    @Override
+    public Tickets addTicket(int idHall, String name, String phone) {
+        return null;
     }
 }

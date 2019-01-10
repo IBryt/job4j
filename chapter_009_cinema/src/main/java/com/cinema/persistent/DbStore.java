@@ -1,6 +1,7 @@
 package com.cinema.persistent;
 
 import com.cinema.model.Hall;
+import com.cinema.model.Tickets;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -73,5 +74,10 @@ public class DbStore implements Store<Hall> {
             LOG.error(e.getMessage(), e);
         }
         return halls;
+    }
+
+    @Override
+    public Tickets addTicket(int idHall, String name, String phone) {
+        return null;
     }
 }
