@@ -23,6 +23,7 @@
         <module>chapter_007</module>
         <module>chapter_008</module>
         <module>chapter_009_cinema</module>
+		<module>chapter__10_io</module>
     </modules>
 
 	<dependencies>
@@ -93,6 +94,12 @@
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>0.7.9</version>
+				<configuration>
+					<excludes>
+						<exclude>**/Q*.java</exclude>
+						<exclude>**/static/**</exclude>
+					</excludes>
+				</configuration>
 				<executions>
 					<execution>
 						<goals>
