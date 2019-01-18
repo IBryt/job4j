@@ -24,10 +24,12 @@ public class CheckInputTest {
     public void returnStreamWithRemoveAbuses() throws IOException {
         String tmp = "тест test tes t те"
                 + System.lineSeparator()
-                + "st te st te";
+                + "st te st te"
+                + System.lineSeparator();
         String expected = "tes t те"
                 + System.lineSeparator()
-                + "st te st te";
+                + "st te st te"
+                + System.lineSeparator();
         String[] abuse = new String[2];
         abuse[0] = "test ";
         abuse[1] = "тест ";

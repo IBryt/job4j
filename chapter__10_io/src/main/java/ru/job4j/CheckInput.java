@@ -36,44 +36,19 @@ public class CheckInput {
     public void dropAbuses(InputStreamReader in, OutputStreamWriter out, String[] abuse) throws IOException {
         try (BufferedReader reader = new BufferedReader(in);
              BufferedWriter writer = new BufferedWriter(out)) {
-            int value = 0;
-            while (value != -1) {
-                value = reader.read();
-                if (value == -1) {
+            String tmp = "";
+            while (tmp != null) {
+                tmp = reader.readLine();
+                if (tmp == null) {
                     break;
                 }
-                if (!skipAbuses(reader, value, abuse)) {
-                    out.write(value);
+                for (String s : abuse) {
+                    tmp = tmp.replaceAll(s, "");
                 }
+                out.write(tmp);
+                out.write(System.lineSeparator());
             }
             writer.flush();
         }
-    }
-
-    private boolean skipAbuses(BufferedReader reader, int value, String[] abuse) throws IOException {
-        boolean skip = false;
-        for (String tmp : abuse) {
-            if (checkAbuse(reader, value, tmp)) {
-                skip = true;
-                break;
-            }
-        }
-        return skip;
-    }
-
-    private boolean checkAbuse(BufferedReader reader, int value, String abuse) throws IOException {
-        int index = 0;
-        boolean isCoincidence = true;
-        reader.mark(abuse.length());
-        while (abuse.length() > index) {
-            if (value == -1 || abuse.charAt(index++) != value) {
-                reader.reset();
-                isCoincidence = false;
-                break;
-            } else if (abuse.length() != index) {
-                value = reader.read();
-            }
-        }
-        return isCoincidence;
     }
 }
