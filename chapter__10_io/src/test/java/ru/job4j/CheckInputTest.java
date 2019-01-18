@@ -19,4 +19,24 @@ public class CheckInputTest {
             assertThat(in.isNumber(in2), is(false));
         }
     }
+
+    @Test
+    public void returnStreamWithRemoveAbuses() throws IOException {
+        String tmp = "тест test tes t те"
+                + System.lineSeparator()
+                + "st te st te";
+        String expected = "tes t те"
+                + System.lineSeparator()
+                + "st te st te";
+        String[] abuse = new String[2];
+        abuse[0] = "test ";
+        abuse[1] = "тест ";
+        ByteArrayInputStream arrayInput = new ByteArrayInputStream(tmp.getBytes());
+        ByteArrayOutputStream arrayOutput = new ByteArrayOutputStream();
+        try (InputStreamReader input = new InputStreamReader(arrayInput);
+             OutputStreamWriter output = new OutputStreamWriter(arrayOutput)) {
+            in.dropAbuses(input, output, abuse);
+            assertThat(arrayOutput.toString(), is(expected));
+        }
+    }
 }
