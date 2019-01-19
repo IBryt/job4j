@@ -8,6 +8,11 @@ services:
 
 before_install:
 - psql -c 'create database tracker;' -U postgres
+- sudo mkdir /tmp/parent
+- sudo mkdir /tmp/parent/child1
+- sudo mkdir /tmp/parent/child1/child3
+- sudo touch /tmp/parent/child1/child3/test.txt
+- sudo touch /tmp/parent/child1/child3/test.tx
 
 cache:
   directories:
