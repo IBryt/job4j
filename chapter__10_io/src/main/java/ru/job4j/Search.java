@@ -33,7 +33,7 @@ public class Search {
         }
 
         public boolean accept(File dir, String name) {
-            File file = new File(dir + "\\" + name);
+            File file = new File(dir + "/" + name);
             return exts.stream().anyMatch(s -> file.isDirectory() || name.endsWith(s));
         }
     }

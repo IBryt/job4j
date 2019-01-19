@@ -18,15 +18,15 @@ public class SearchTest {
     @Test
     public void test() throws IOException {
         List<String> expected = new ArrayList<>();
-        String parent = path + "\\parent";
+        String parent = path + "/parent";
         new File(parent).mkdirs();
-        new File(parent + "\\child1").mkdirs();
-        new File(parent + "\\child2").mkdirs();
-        new File(parent + "\\child1\\child3").mkdirs();
-        File file = new File(parent + "\\child1\\child3\\test.txt");
+        new File(parent + "/child1").mkdirs();
+        new File(parent + "/child2").mkdirs();
+        new File(parent + "/child1/child3").mkdirs();
+        File file = new File(parent + "/child1/child3/test.txt");
         file.createNewFile();
         expected.add(file.getAbsolutePath());
-        new File(parent + "\\child1\\child3\\test.tx").createNewFile();
+        new File(parent + "/child1/child3/test.tx").createNewFile();
         File myFolder = new File(parent);
         File[] files1 = myFolder.listFiles();
         Search search = new Search();
