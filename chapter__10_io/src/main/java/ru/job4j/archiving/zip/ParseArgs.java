@@ -1,4 +1,4 @@
-package ru.job4j.zip;
+package ru.job4j.archiving.zip;
 import org.apache.commons.cli.*;
 
 import java.nio.file.Paths;

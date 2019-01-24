@@ -1,4 +1,4 @@
-package ru.job4j;
+package ru.job4j.archiving;
 
 import java.io.File;
 import java.io.FilenameFilter;

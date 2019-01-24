@@ -1,5 +1,7 @@
 package ru.job4j;
 import org.junit.Test;
+import ru.job4j.archiving.CheckInput;
+
 import java.io.*;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;

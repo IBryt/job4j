@@ -1,4 +1,4 @@
-package ru.job4j.zip;
+package ru.job4j.archiving.zip;
 
 import java.io.*;
 import java.nio.ByteBuffer;

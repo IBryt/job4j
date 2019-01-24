@@ -1,6 +1,7 @@
 package ru.job4j;
 
 import org.junit.Test;
+import ru.job4j.archiving.Search;
 
 import java.io.File;
 import java.io.IOException;
