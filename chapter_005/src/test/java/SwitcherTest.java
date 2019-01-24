@@ -61,10 +61,13 @@ public class SwitcherTest {
 
     private void test(int value, ReentrantLock lock, AtomicBoolean current, AtomicBoolean second) throws InterruptedException {
         while (count.get() < SIZE) {
-            while (!current.get()
-                    && !lock.isLocked()
+            while (!lock.isLocked()
+                    && !current.get()
                     && lock.tryLock()) {
                 count.incrementAndGet();
+                if (count.get() > SIZE) {
+                    break;
+                }
                 for (int i = 0; i < 10; i++) {
                     switcher.addValue(value);
                 }
