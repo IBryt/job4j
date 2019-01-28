@@ -31,11 +31,13 @@ public class ThreadPool implements Executor {
 
     private boolean close() {
         boolean res = true;
-        for (Thread thread : threads) {
-            thread.interrupt();
-            if (thread.isInterrupted()) {
-                res = false;
-                break;
+        if (!tasks.isEmpty()) {
+            for (Thread thread : threads) {
+                thread.interrupt();
+                if (thread.isInterrupted()) {
+                    res = false;
+                    break;
+                }
             }
         }
         return res;
