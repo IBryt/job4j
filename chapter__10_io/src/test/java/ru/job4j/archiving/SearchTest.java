@@ -1,4 +1,4 @@
-package ru.job4j;
+package ru.job4j.archiving;
 
 import org.junit.Test;
 import ru.job4j.archiving.Search;

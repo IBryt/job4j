@@ -8,10 +8,25 @@ import ru.job4j.chat.storage.*;
 
 import java.io.IOException;
 
+/**
+ * The startup class and initializes the data for the chat.
+ */
 public class App {
+    /**
+     * Logger.
+     */
     private static final Logger LOG = LogManager.getLogger(App.class.getName());
+    /**
+     * Enter data in chat
+     */
     private Input input;
+    /**
+     * Chat logic.
+     */
     private Logic logic;
+    /**
+     * Data output from chat
+     */
     private Output output;
 
     public App(final Input input, final Logic logic, final Output output) {
@@ -20,17 +35,20 @@ public class App {
         this.output = output;
     }
 
-    private void start() throws IOException {
-        String response;
-        String send;
+    /**
+     * Starting work the chat.
+     *
+     * @throws IOException If an I/O error occurs.
+     */
+    public void start() throws IOException {
+        String response = "";
+        String send = "";
         do {
             send = input.getSend();
             logic.add(send);
-            if (logic.showResponse(send)) {
-                response = output.getResponse();
-                output.display(response);
-                logic.add(response);
-            }
+            response = output.getResponse(send);
+            output.display(response);
+            logic.add(response);
         } while (send.intern() != Logic.CLOSE);
     }
 

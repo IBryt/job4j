@@ -3,19 +3,27 @@ package ru.job4j.chat.logic;
 import ru.job4j.chat.storage.Storage;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
 
-public class Logic implements BasicLogic {
+/**
+ * Implements logic work chat.
+ */
+public final class Logic implements BasicLogic {
+    /**
+     * value to check output response
+     */
     private boolean show = true;
+
+    /**
+     * Link on storage.
+     */
     private Storage storage;
-    private List<String> randomMsg;
-    public Logic(Storage storage) throws IOException {
+
+    public Logic(Storage storage) {
         this.storage = storage;
-        randomMsg = storage.getRandomMsg();
     }
 
-
-    public boolean showResponse(String value) {
+    private boolean showResponse(String value) {
         if (BasicLogic.STOP == value.intern()) {
             show = false;
         } else if (BasicLogic.CONTINUE == value.intern()) {
@@ -25,13 +33,22 @@ public class Logic implements BasicLogic {
     }
 
     @Override
-    public void add(String msg) throws IOException {
-         storage.add(msg);
+    public boolean add(String msg) throws IOException {
+        boolean res = false;
+        if (showMessage(msg)) {
+            storage.add(msg);
+            res = true;
+        }
+        return res;
     }
 
     @Override
-    public String getRandomMsg() {
-        return randomMsg.get(new Random().nextInt(randomMsg.size()));
+    public String getRandomMsg(String send) {
+        return showResponse(send) ? storage.getRandomResp() : "";
     }
 
+    @Override
+    public List<String> getAllMessages() throws IOException {
+        return storage.getAllMessages();
+    }
 }
