@@ -25,7 +25,8 @@
         <module>chapter_009_cinema</module>
 		<module>chapter__10_io</module>
 		<module>chapter_011_todolist</module>
-	</modules>
+        <module>chapter_012_spring</module>
+    </modules>
 
 	<dependencies>
 		<!-- https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin -->
