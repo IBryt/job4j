@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>todo list</title>
+</head>
+<body>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function () {
+        lisnerCheckBoxDone();
+        loadItems()
+    });
+
+    function lisnerCheckBoxDone() {
+        $('#done').click(function() {
+            loadItems();
+        });
+    }
+
+    function loadItems() {
+        $.ajax('./item', {
+                method : 'get',
+                data : {done : document.getElementById("done").checked},
+                complete: function (data) {
+                    var json = JSON.parse(data.responseText);
+                    var res = '';
+                    for (var i in json) {
+                        res +=
+                            '<tr>' +
+                            '<td>' + json[i].id + '</td>' +
+                            '<td>' + json[i].desc +  '</td>' +
+                            '<td>' + json[i].created + '</td>' +
+                            '<td>' + json[i].done + '</td>';
+                        res += '</tr>';
+                    }
+                    document.getElementById("items").innerHTML = res;
+                }
+            }
+        );
+    };
+</script>
+<div class="container">
+    <div class="row pt-3">
+        <h4>
+            Show todo list
+        </h4>
+        <div class="container">
+            <input type="checkbox" id="done" checked>
+            <label for="done">show all.</label>
+        </div>
+        <table class="table table-bordered" id="main-table">
+            <thead>
+            <tr>
+                <th>id</th>
+                <th>desc</th>
+                <th>created</th>
+                <th>done</th>
+            </tr>
+            </thead>
+            <tbody id="items">
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

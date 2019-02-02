@@ -24,7 +24,8 @@
         <module>chapter_008</module>
         <module>chapter_009_cinema</module>
 		<module>chapter__10_io</module>
-    </modules>
+		<module>chapter_011_todolist</module>
+	</modules>
 
 	<dependencies>
 		<!-- https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin -->
@@ -53,7 +54,7 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>9.3-1100-jdbc41</version>
+			<version>9.4.1208.jre7</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
