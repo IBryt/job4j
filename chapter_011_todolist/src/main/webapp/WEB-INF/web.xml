@@ -7,10 +7,19 @@
     <servlet>
         <servlet-name>ControllerItems</servlet-name>
         <servlet-class>ru.job4j.servlets.ControllerItems</servlet-class>
+        <load-on-startup>1</load-on-startup>
      </servlet>
     <servlet-mapping>
         <servlet-name>ControllerItems</servlet-name>
         <url-pattern>/item</url-pattern>
     </servlet-mapping>
-
+    <servlet>
+        <servlet-name>ControllerCRUDItems</servlet-name>
+        <servlet-class>ru.job4j.servlets.ControllerCRUDItems</servlet-class>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ControllerCRUDItems</servlet-name>
+        <url-pattern>/crud_items</url-pattern>
+    </servlet-mapping>
 </web-app>
