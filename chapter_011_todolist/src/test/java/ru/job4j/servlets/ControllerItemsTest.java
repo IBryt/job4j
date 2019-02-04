@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.*;
 import java.io.IOException;
 
@@ -24,11 +25,12 @@ public class ControllerItemsTest {
         controller.destroy();
     }
 
-//    @Test
-//    public void test() throws ServletException, IOException {
+    @Test
+    public void whenParameterEqualDoneThenReturnOnlyDoneItems() throws ServletException, IOException {
 //        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
 //        HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
 //        when(request.getParameter("done")).thenReturn("false");
+//        //when(response.getOutputStream()).thenReturn();
 //        controller.doGet(request, response);
-//    }
+    }
 }

@@ -35,9 +35,11 @@ public class ControllerItems extends HttpServlet {
             session.close();
         }
         String json = new ObjectMapper().writeValueAsString(items);
-        PrintWriter writer = new PrintWriter(new OutputStreamWriter(resp.getOutputStream(), "utf-8"));
-        writer.append(json);
-        writer.flush();
+        try (final OutputStreamWriter streamWriter = new OutputStreamWriter(resp.getOutputStream(), "utf-8");
+             final PrintWriter writer = new PrintWriter(streamWriter)) {
+            writer.append(json);
+            writer.flush();
+        }
     }
 
     @Override
