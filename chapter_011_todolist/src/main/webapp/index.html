@@ -29,6 +29,9 @@
                 $('#created').val(new Date().toJSON().slice(0,19));
             };
         });
+        $('#input_done').click(function () {
+            alert("test");
+        })
     });
 
     function validate() {
@@ -68,12 +71,19 @@
                     var json = JSON.parse(data.responseText);
                     var res = '';
                     for (var i in json) {
+                        if (json[i].done) {
+                            var chec = "checked";
+                        } else {
+                            var chec = "";
+                        }
                         res +=
                             '<tr>' +
                             '<td>' + json[i].id + '</td>' +
                             '<td>' + json[i].desc +  '</td>' +
                             '<td>' + new Date(json[i].created).toJSON().slice(0,19) + '</td>' +
-                            '<td>' + json[i].done + '</td>';
+                            '<td style="text-align: center; vertical-align: middle;"> ' +
+                                '<input type="checkbox" name=' + json[i].id + ' value="input_done" ' + chec + ' >' +
+                            '</td>';
                         res += '</tr>';
                     }
                     document.getElementById("items").innerHTML = res;

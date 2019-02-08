@@ -1,20 +1,16 @@
-package ru.job4j.models;
+package ru.job4j.models.impl;
 
+import ru.job4j.models.Model;
+
+import javax.persistence.*;
 import java.sql.Timestamp;
 
-public class Item {
-    private int id;
+@Entity
+public class Item extends Model {
+
     private String desc;
     private Timestamp created;
     private boolean done;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getDesc() {
         return desc;

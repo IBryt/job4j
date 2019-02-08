@@ -6,7 +6,7 @@
          version="2.4">
     <servlet>
         <servlet-name>ControllerItems</servlet-name>
-        <servlet-class>ru.job4j.servlets.ControllerItems</servlet-class>
+        <servlet-class>ru.job4j.controller.ControllerItems</servlet-class>
         <load-on-startup>1</load-on-startup>
      </servlet>
     <servlet-mapping>
@@ -15,7 +15,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>ControllerCRUDItems</servlet-name>
-        <servlet-class>ru.job4j.servlets.ControllerCRUDItems</servlet-class>
+        <servlet-class>ru.job4j.controller.ControllerCRUDItems</servlet-class>
         <load-on-startup>2</load-on-startup>
     </servlet>
     <servlet-mapping>
