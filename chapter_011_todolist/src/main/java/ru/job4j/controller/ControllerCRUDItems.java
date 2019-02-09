@@ -17,7 +17,17 @@ public class ControllerCRUDItems extends HttpServlet {
         final String type = req.getParameter("type");
         if (type.equals("add")) {
             add(req);
+        } else if (type.equals("update")) {
+            update(req);
         }
+    }
+
+    private void update(HttpServletRequest req) {
+        final boolean done = Boolean.parseBoolean(req.getParameter("done"));
+        final int id = Integer.parseInt(req.getParameter("id"));
+        final Item item = VALIDATE.findByID(id);
+        item.setDone(done);
+        VALIDATE.update(item);
     }
 
     private void add(HttpServletRequest req) {

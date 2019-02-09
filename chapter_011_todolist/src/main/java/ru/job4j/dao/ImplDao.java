@@ -33,6 +33,7 @@ public class ImplDao<T extends Model> implements Dao<T> {
             em.getTransaction().commit();
         } catch (final Exception e) {
             em.getTransaction().rollback();
+            LOG.error(e.getMessage(), e);
             throw e;
         } finally {
             em.close();
@@ -47,9 +48,9 @@ public class ImplDao<T extends Model> implements Dao<T> {
         try {
             em.persist(t);
             em.getTransaction().commit();
-//            em.detach(t);
         } catch (final Exception e) {
             em.getTransaction().rollback();
+            LOG.error(e.getMessage(), e);
             throw e;
         } finally {
             em.close();
@@ -72,12 +73,15 @@ public class ImplDao<T extends Model> implements Dao<T> {
             final CriteriaQuery<T> query = builder.createQuery(persistentClass);
             final Root<T> root = query.from(persistentClass);
             final List<Predicate> predicates = setConditions(builder, root, sectionWhere);
-            final CriteriaQuery<T> all = query.select(root).where(builder.and(predicates.toArray(new Predicate[predicates.size()])));
+            final CriteriaQuery<T> all = query.select(root);
+           // all.where(builder.and(predicates.toArray(new Predicate[predicates.size()])));
+            all.orderBy(builder.asc(root.get("id")));
             final TypedQuery<T> allQuery = em.createQuery(all);
             list = allQuery.getResultList();
             em.getTransaction().commit();
         } catch (final Exception e) {
             em.getTransaction().rollback();
+            LOG.error(e.getMessage(), e);
             throw e;
         } finally {
             em.close();
@@ -86,7 +90,7 @@ public class ImplDao<T extends Model> implements Dao<T> {
     }
 
     @Override
-    public T findByID(int id, Class<T> persistentClass) {
+    public T findByID(final int id, final Class<T> persistentClass) {
         final EntityManager em = FACTORY.createEntityManager();
         T t = null;
         em.getTransaction().begin();
@@ -100,6 +104,7 @@ public class ImplDao<T extends Model> implements Dao<T> {
             t = resQuery.getSingleResult();
         } catch (final Exception e) {
             em.getTransaction().rollback();
+            LOG.error(e.getMessage(), e);
             throw e;
         } finally {
             em.close();
@@ -117,7 +122,7 @@ public class ImplDao<T extends Model> implements Dao<T> {
     }
 
     @Override
-    public T update(T t) {
+    public T update(final T t) {
         final EntityManager em = FACTORY.createEntityManager();
         em.getTransaction().begin();
         try {
@@ -125,6 +130,7 @@ public class ImplDao<T extends Model> implements Dao<T> {
             em.getTransaction().commit();
         } catch (final Exception e) {
             em.getTransaction().rollback();
+            LOG.error(e.getMessage(), e);
             throw e;
         } finally {
             em.close();

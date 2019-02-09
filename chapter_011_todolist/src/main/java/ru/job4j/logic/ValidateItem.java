@@ -34,4 +34,12 @@ public class ValidateItem {
         }
         return list;
     }
+
+    public void update(Item item) {
+        DAO.update(item);
+    }
+
+    public Item findByID(int id) {
+        return (Item) DAO.findByID(id, Item.class);
+    }
 }
