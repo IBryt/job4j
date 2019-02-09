@@ -1,6 +1,7 @@
 package ru.job4j.dao;
 
 import org.junit.Test;
+import ru.job4j.dao.impl.ImplDao;
 import ru.job4j.models.impl.Item;
 
 import java.sql.Timestamp;

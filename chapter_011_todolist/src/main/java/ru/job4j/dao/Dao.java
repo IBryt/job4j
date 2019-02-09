@@ -2,9 +2,11 @@ package ru.job4j.dao;
 
 import ru.job4j.models.Model;
 
+import javax.persistence.EntityManager;
 import javax.persistence.criteria.*;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Main methods CRUD operations.

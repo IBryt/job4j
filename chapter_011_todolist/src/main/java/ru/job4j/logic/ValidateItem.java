@@ -1,7 +1,7 @@
 package ru.job4j.logic;
 
 import org.apache.logging.log4j.*;
-import ru.job4j.dao.ImplDao;
+import ru.job4j.dao.impl.ImplDao;
 import ru.job4j.models.impl.Item;
 
 import java.util.*;

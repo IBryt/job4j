@@ -2,7 +2,7 @@ package ru.job4j.controller;
 
 import org.junit.Test;
 import org.mockito.Mockito;
-import ru.job4j.dao.ImplDao;
+import ru.job4j.dao.impl.ImplDao;
 import ru.job4j.models.impl.Item;
 
 import javax.servlet.ServletException;
