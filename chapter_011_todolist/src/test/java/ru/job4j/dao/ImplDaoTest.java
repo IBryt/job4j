@@ -6,6 +6,7 @@ import ru.job4j.models.impl.Item;
 
 import java.sql.Timestamp;
 
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 public class ImplDaoTest {
@@ -28,11 +29,21 @@ public class ImplDaoTest {
 
     @Test(expected = Exception.class)
     public void whenItemUpdatedDifferentThreadsReturnException() throws InterruptedException {
-        final Item item = dao.add(getItem());
-        final Item expected = dao.findByID(item.getId(), Item.class);
-        final Item forException = dao.findByID(item.getId(), Item.class);
-        execute(expected, "desc1");
-        execute(forException, "desc2");
+        Item item = null;
+        Item expected = null;
+        try {
+            item = dao.add(getItem());
+            expected = dao.findByID(item.getId(), Item.class);
+            final Item forException = dao.findByID(item.getId(), Item.class);
+            execute(expected, "desc1");
+            execute(forException, "desc2");
+        } catch (Exception e) {
+            assertThat(item, is(notNullValue()));
+            item.setDesc("desc1");
+            assertThat(item, is(expected));
+            dao.remove(item, Item.class);
+            throw e;
+        }
     }
 
     private void execute(Item item, String value) throws InterruptedException {

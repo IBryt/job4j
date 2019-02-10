@@ -26,7 +26,6 @@ public class ControllerItemsTest {
     private final ControllerItems controller = new ControllerItems();
 
     @Test
-    @PrepareForTest(HttpServletResponse.class)
     public void whetGetRequestReturnJson() throws ServletException, IOException {
         final Item add = dao.add(getItem());
         String expected = new ObjectMapper().writeValueAsString(Arrays.asList(add));
@@ -37,6 +36,7 @@ public class ControllerItemsTest {
         when(resp.getOutputStream()).thenReturn(outputStream);
         controller.doGet(req, resp);
         assertThat(String.valueOf(outputStream.baos), is(expected));
+        dao.remove(add, Item.class);
     }
 
     private Item getItem() {
