@@ -18,7 +18,7 @@ public class ThreadPool implements Executor {
         }
     }
 
-    public synchronized void shutdown() {
+    public void shutdown() {
         isRunning = false;
         while (!close()) {
             try {
@@ -44,7 +44,7 @@ public class ThreadPool implements Executor {
     }
 
     @Override
-    public synchronized void execute(Runnable command) {
+    public void execute(Runnable command) {
         if (isRunning) {
             tasks.offer(command);
         }
@@ -54,7 +54,7 @@ public class ThreadPool implements Executor {
 
         @Override
         public void run() {
-            while (!Thread.currentThread().isInterrupted()) {
+            while (!(tasks.isEmpty() && Thread.currentThread().isInterrupted())) {
                 try {
                     Runnable nextTask = tasks.poll();
                     nextTask.run();
