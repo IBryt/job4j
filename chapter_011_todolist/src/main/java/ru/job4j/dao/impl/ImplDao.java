@@ -2,6 +2,7 @@ package ru.job4j.dao.impl;
 
 import ru.job4j.dao.AbstractDao;
 import ru.job4j.models.Model;
+import ru.job4j.models.impl.Item;
 
 import javax.persistence.*;
 import javax.persistence.criteria.*;
@@ -24,7 +25,7 @@ public class ImplDao<T extends Model> extends AbstractDao<T> {
     @Override
     public T remove(final T t, final Class<T> persistentClass) {
         return this.wrapper(em ->  {
-                    final T entity = findByID(t.getId(), persistentClass);
+                    final T entity  = em.find(persistentClass, t.getId(), LockModeType.OPTIMISTIC);
                     em.remove(em.contains(entity) ? entity : em.merge(entity));
                     return t;
                 }
@@ -49,7 +50,7 @@ public class ImplDao<T extends Model> extends AbstractDao<T> {
     public List<T> getAll(final Class<T> persistentClass, final Map<String, Object> sectionWhere) {
         return this.wrapper(em -> {
                     final CriteriaBuilder builder = em.getCriteriaBuilder();
-                   final CriteriaQuery<T> query = builder.createQuery(persistentClass);
+                    final CriteriaQuery<T> query = builder.createQuery(persistentClass);
                     final Root<T> root = query.from(persistentClass);
                     final List<Predicate> predicates = setConditions(builder, root, sectionWhere);
                     final CriteriaQuery<T> all = query.select(root);
@@ -63,20 +64,17 @@ public class ImplDao<T extends Model> extends AbstractDao<T> {
 
     @Override
     public T findByID(final int id, final Class<T> persistentClass) {
-        return this.wrapper(em ->  {
-                    final CriteriaBuilder builder = em.getCriteriaBuilder();
-                    final CriteriaQuery<T> query = builder.createQuery(persistentClass);
-                    final Root<T> from = query.from(persistentClass);
-                    query.select(from);
-                    query.where(builder.equal(from.get("id"), id));
-                    final TypedQuery<T> resQuery = em.createQuery(query);
-                    return resQuery.getSingleResult();
-                }
-        );
+        return this.wrapper(em ->  em.find(persistentClass, id));
     }
 
     @Override
     public T update(final T t) {
-        return this.wrapper(em ->  em.merge(t));
+        return this.wrapper(em ->  {
+                    em.find(Item.class, t.getId(), LockModeType.OPTIMISTIC);
+                    em.merge(t);
+                    t.setVersion(t.getVersion() + 1);
+                    return t;
+                }
+        );
     }
 }
