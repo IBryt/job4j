@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>todo list</title>
+</head>
+<body>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function () {
+        lisnerCheckBoxDone();
+        loadItems();
+        $('#created').val(new Date().toJSON().slice(0,19));
+        $('#add_item').click(function() {
+            if (validate()) {
+                addItems();
+                document.getElementById("add_form").reset();
+                $('#created').val(new Date().toJSON().slice(0,19));
+            };
+        });
+
+        $(document).on('change', ':checkbox', function () {
+            var name = $(this).attr('name');
+            if (name == 'input_done') {
+                $.ajax('./crud_items', {
+                        method : 'post',
+                        data : {
+                            id : $(this).attr('id'),
+                            done : $(this).prop('checked'),
+                            type : 'update'
+                        },
+                        complete: function() {loadItems()}
+                    }
+                );
+            }
+        });
+    });
+
+    function validate() {
+        var res = true;
+        if($('#desc').val() == '') {
+            res = false;
+            alert($('#desc').attr('title'));
+        }
+        return res
+    }
+
+    function addItems() {
+        $.ajax('./crud_items', {
+                method : 'post',
+                data : {
+                    type : 'add',
+                    desc : $('#desc').val(),
+                    created : $('#created').val(),
+                    done : document.getElementById("done").checked
+                },
+                complete: function() {loadItems()}
+            }
+        );
+    }
+
+    function lisnerCheckBoxDone() {
+        $('#only_done').click(function() {
+            loadItems();
+        });
+    }
+
+    function loadItems() {
+        $.ajax('./item', {
+                method : 'get',
+                data : {done : document.getElementById("only_done").checked},
+                complete: function (data) {
+                    var json = JSON.parse(data.responseText);
+                    var res = '';
+                    for (var i in json) {
+                        if (json[i].done) {
+                            var chec = "checked";
+                        } else {
+                            var chec = "";
+                        }
+                        res +=
+                            '<tr>' +
+                            '<td>' + json[i].id + '</td>' +
+                            '<td>' + json[i].desc +  '</td>' +
+                            '<td>' + new Date(json[i].created).toJSON().slice(0,19) + '</td>' +
+                            '<td style="text-align: center; vertical-align: middle;"> ' +
+                            '<input type="checkbox" id=' + json[i].id + ' name="input_done" ' + chec + ' >' +
+                            '</td>';
+                        res += '</tr>';
+                    }
+                    document.getElementById("items").innerHTML = res;
+                }
+            }
+        );
+    };
+</script>
+<div class="container">
+    <div class="row pt-3">
+        <h4>
+            Show todo list
+        </h4>
+        <div class="container">
+            <input type="checkbox" id="only_done" checked>
+            <label for="only_done">show all.</label>
+        </div>
+        <table class="table table-bordered" id="main-table">
+            <thead>
+            <tr>
+                <th>id</th>
+                <th>desc</th>
+                <th>created</th>
+                <th>done</th>
+            </tr>
+            </thead>
+            <tbody id="items">
+            </tbody>
+        </table>
+    </div>
+    <div class="content">
+        <form id="add_form">
+            <div class="form-group row">
+                <label for="desc" class="col-sm-2 col-form-label">description</label>
+                <div class="col-sm-10">
+                    <textarea type="textarea" class="form-control" id="desc" title="fill in the description field"  placeholder="description"></textarea>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="created" class="col-sm-2 col-form-label">Create date</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="created" placeholder="created" readonly>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="done" class="col-sm-2 col-form-label">done</label>
+                <div class="col-sm-10">
+                    <input type="checkbox" class="styled" id="done" placeholder="done">
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-10">
+                    <button id="add_item" type="button"  class="btn btn-success">add</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

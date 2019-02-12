@@ -26,7 +26,8 @@
 		<module>chapter__10_io</module>
 		<module>chapter_011_todolist</module>
         <module>chapter_012_spring</module>
-    </modules>
+		<module>chapter_013_avito</module>
+	</modules>
 
 	<dependencies>
 		<!-- https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin -->
