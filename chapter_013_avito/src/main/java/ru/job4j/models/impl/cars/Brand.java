@@ -5,12 +5,12 @@ import ru.job4j.models.Model;
 import javax.persistence.*;
 import java.util.*;
 
-//@Entity
+@Entity
 public class Brand extends Model {
 
     private String name;
 
-    //@OneToMany(fetch = FetchType.EAGER, mappedBy = "brand")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "brand")
     private Set<Car> cars = new HashSet<>();
 
     public Set<Car> getCars() {

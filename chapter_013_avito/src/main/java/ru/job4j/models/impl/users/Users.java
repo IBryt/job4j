@@ -10,13 +10,13 @@ import javax.persistence.OneToMany;
 import java.util.HashSet;
 import java.util.Set;
 
-//@Entity
+@Entity
 public class Users extends Model {
 
     private String login;
     private String password;
 
-   // @ManyToMany(fetch = FetchType.EAGER, mappedBy = "authors")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "authors")
     private Set<Car> cars = new HashSet<>();
 
     public String getLogin() {

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm
+        http://java.sun.com/xml/ns/persistence/orm_1_0.xsd"
+                 version="1.0">
+
+    <package>ru.job4j.models.impl.cars</package>
+    <entity class="ru.job4j.models.impl.cars.Car">
+        <attributes>
+            <basic name="name"/>
+            <basic name="saleStatus"/>
+            <many-to-one name="brand" fetch="EAGER">
+                <cascade>
+                    <cascade-persist/>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <many-to-one name="carcase" fetch="EAGER">
+                <cascade>
+                    <cascade-persist/>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <many-to-one name="category" fetch="EAGER">
+                <cascade>
+                    <cascade-persist/>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-one>
+            <many-to-many name="authors" fetch="EAGER">
+                <join-table name="av_car_authors">
+                    <join-column name="car_id"/>
+                    <inverse-join-column name="authors_id"/>
+                </join-table>
+                <cascade>
+                    <cascade-persist/>
+                    <cascade-merge/>
+                </cascade>
+            </many-to-many>
+        </attributes>
+    </entity>
+</entity-mappings>

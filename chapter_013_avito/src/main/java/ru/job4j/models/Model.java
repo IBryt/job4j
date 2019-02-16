@@ -3,14 +3,14 @@ package ru.job4j.models;
 import javax.persistence.*;
 import java.io.Serializable;
 
-//@MappedSuperclass
+@MappedSuperclass
 public class Model implements Serializable {
 
-  //  @Id
- //   @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-//    @Version
+    @Version
     private long version;
 
     public Model(int id) {

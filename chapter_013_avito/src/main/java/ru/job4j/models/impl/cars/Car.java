@@ -7,28 +7,28 @@ import ru.job4j.models.impl.users.Users;
 import javax.persistence.*;
 import java.util.*;
 
-//@Entity
+@Entity
 public class Car extends Model {
 
     private String name;
 
-   // @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     private SaleStatus saleStatus;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private Category category;
 
-  //  @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private Brand brand;
 
-  //  @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private Carcase carcase;
 
-//    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-//    @JoinTable(name = CustomNamingStrategy.PREFIX + "car_authors",
-//            joinColumns = @JoinColumn(name="car_id"),
-//            inverseJoinColumns = @JoinColumn(name="authors_id")
-//    )
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinTable(name = CustomNamingStrategy.PREFIX + "car_authors",
+            joinColumns = @JoinColumn(name = "car_id"),
+            inverseJoinColumns = @JoinColumn(name = "authors_id")
+    )
     private Set<Users> authors = new HashSet<>();
 
     public SaleStatus getSaleStatus() {

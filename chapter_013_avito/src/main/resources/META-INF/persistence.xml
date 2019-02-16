@@ -6,7 +6,12 @@
 
     <persistence-unit name="tracker">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-
+        <!--<mapping-file>models/model-orm.xml</mapping-file>-->
+        <!--<mapping-file>models/cars/brand-orm.xml</mapping-file>-->
+        <!--<mapping-file>models/cars/carcase-orm.xml</mapping-file>-->
+        <!--<mapping-file>models/cars/category-orm.xml</mapping-file>-->
+        <!--<mapping-file>models/users/users-orm.xml</mapping-file>-->
+        <!--<mapping-file>models/cars/car-orm.xml</mapping-file>-->
         <class>ru.job4j.models.impl.cars.Car</class>
         <class>ru.job4j.models.impl.cars.Category</class>
         <class>ru.job4j.models.impl.cars.Brand</class>
