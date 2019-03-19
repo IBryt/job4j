@@ -13,6 +13,13 @@ public class Brand extends Model {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "brand")
     private Set<Car> cars = new HashSet<>();
 
+    public Brand(String name) {
+        this.name = name;
+    }
+
+    public Brand() {
+    }
+
     public Set<Car> getCars() {
         return cars;
     }

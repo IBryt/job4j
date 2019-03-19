@@ -13,13 +13,39 @@
         <!--<servlet-name>ControllerItems</servlet-name>-->
         <!--<url-pattern>/item</url-pattern>-->
     <!--</servlet-mapping>-->
-    <!--<servlet>-->
-        <!--<servlet-name>ControllerCRUDItems</servlet-name>-->
-        <!--<servlet-class>ru.job4j.controller.ControllerCRUDItems</servlet-class>-->
-        <!--<load-on-startup>2</load-on-startup>-->
-    <!--</servlet>-->
-    <!--<servlet-mapping>-->
-        <!--<servlet-name>ControllerCRUDItems</servlet-name>-->
-        <!--<url-pattern>/crud_items</url-pattern>-->
-    <!--</servlet-mapping>-->
+    <servlet>
+        <servlet-name>ControllerLogin</servlet-name>
+        <servlet-class>ru.job4j.controller.ControllerLogin</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ControllerLogin</servlet-name>
+        <url-pattern>/login</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>ControllerMainPage</servlet-name>
+        <servlet-class>ru.job4j.controller.ControllerMainPage</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ControllerMainPage</servlet-name>
+        <url-pattern>/content</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>ControllerAdd</servlet-name>
+        <servlet-class>ru.job4j.controller.ControllerAdd</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ControllerAdd</servlet-name>
+        <url-pattern>/add</url-pattern>
+    </servlet-mapping>
+    <filter>
+        <filter-name>AuthFilter</filter-name>
+        <filter-class>ru.job4j.controller.AuthFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>*</url-pattern>
+    </filter-mapping>
 </web-app>

@@ -27,14 +27,16 @@
             <property name="hibernate.hbm2ddl.auto" value="update"/>
 
             <property name="hibernate.implicit_naming_strategy" value="ru.job4j.CustomNamingStrategy"/>
-            <property name="hibernate.show_sql" value="true"/>
-            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.show_sql" value="false"/>
+            <property name="hibernate.format_sql" value="false"/>
 
             <property name="hibernate.c3p0.min_size" value="5"/>
             <property name="hibernate.c3p0.max_size" value="20"/>
             <property name="hibernate.c3p0.timeout" value="300"/>
             <property name="hibernate.c3p0.max_statements" value="50"/>
             <property name="hibernate.c3p0.idle_test_period" value="3000"/>
+
+            <property name="directoryFromFile" value="/avitoimg/"/>
         </properties>
 
     </persistence-unit>

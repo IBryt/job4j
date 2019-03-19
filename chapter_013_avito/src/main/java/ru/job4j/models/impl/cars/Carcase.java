@@ -11,6 +11,13 @@ public class Carcase extends Model {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "carcase")
     private Set<Car> cars = new HashSet<>();
 
+    public Carcase(String name) {
+        this.name = name;
+    }
+
+    public Carcase() {
+    }
+
     public Set<Car> getCars() {
         return cars;
     }

@@ -11,6 +11,7 @@ import java.util.*;
 public class Car extends Model {
 
     private String name;
+    private String uploadPath;
 
     @Enumerated(EnumType.STRING)
     private SaleStatus saleStatus;
@@ -106,6 +107,14 @@ public class Car extends Model {
             return false;
         }
         return carcase != null ? carcase.equals(car.carcase) : car.carcase == null;
+    }
+
+    public String getUploadPath() {
+        return uploadPath;
+    }
+
+    public void setUploadPath(String uploadPath) {
+        this.uploadPath = uploadPath;
     }
 
     @Override

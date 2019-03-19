@@ -19,6 +19,14 @@ public class Users extends Model {
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "authors")
     private Set<Car> cars = new HashSet<>();
 
+    public Users(String login) {
+        this.login = login;
+    }
+
+    public Users() {
+
+    }
+
     public String getLogin() {
         return login;
     }
