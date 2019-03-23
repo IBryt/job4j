@@ -8,10 +8,11 @@ import java.util.List;
 
 @Component
 public class UserStorage {
+
     private final Storage storage;
 
     @Autowired
-    public UserStorage(final Storage storage) {
+    public UserStorage(@Qualifier("memoryStorage") Storage storage) {
         this.storage = storage;
     }
 

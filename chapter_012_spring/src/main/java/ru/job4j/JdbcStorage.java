@@ -7,7 +7,7 @@ import ru.job4j.mapper.UserMapper;
 
 import java.util.List;
 
-@Component
+@Component(value = "jdbcStorage")
 public class JdbcStorage implements Storage {
 
     private final JdbcTemplate storage;
@@ -26,5 +26,9 @@ public class JdbcStorage implements Storage {
     public List<User> getAll() {
         String sql = "SELECT * FROM users";
         return storage.query(sql, new UserMapper());
+    }
+
+    public JdbcTemplate getStorage() {
+        return storage;
     }
 }
